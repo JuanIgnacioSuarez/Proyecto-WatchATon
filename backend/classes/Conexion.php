@@ -1,0 +1,89 @@
+<?php
+class Conexion {
+    private $conn;
+
+    public function __construct() {
+        $host = "localhost";
+        $user = "root";
+        $pass = "";
+        $db   = "proyectowebbd";
+
+        $this->conn = new mysqli($host, $user, $pass, $db);
+
+        if ($this->conn->connect_error) {
+            die("Error de conexión: " . $this->conn->connect_error);
+        }
+    }
+
+    // Método para insertar
+    public function insertar($sql, $tipos, $parametros) {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param($tipos, ...$parametros);
+        $resultado = $stmt->execute();
+        $stmt->close();
+        return $resultado;
+    }
+
+    // Método para actualizar
+    public function actualizar($sql, $tipos, $parametros) {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param($tipos, ...$parametros);
+        $resultado = $stmt->execute();
+        $stmt->close();
+        return $resultado;
+    }
+
+    // Método para eliminar
+    public function eliminar($sql, $tipos, $parametros) {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param($tipos, ...$parametros);
+        $resultado = $stmt->execute();
+        $stmt->close();
+        return $resultado;
+    }
+
+    // Método para consultar (SELECT)
+    public function consultar($sql, $tipos = "", $parametros = []) {
+        $stmt = $this->conn->prepare($sql);
+        if (!empty($tipos)) {
+            $stmt->bind_param($tipos, ...$parametros);
+        }
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $datos;
+    }
+
+    //Esta funcion permite  saber si un dato esta o no en la base
+    public function existeDato($tabla, $campo1, $campo2, $valor) {
+    $sql = "SELECT $campo1 FROM $tabla WHERE $campo2 = ?";
+    $stmt = $this->conn->prepare($sql);
+
+    // Detecta el tipo de dato para bind_param
+    if (is_int($valor)) {
+        $tipo = "i";
+    } elseif (is_double($valor)) {
+        $tipo = "d";
+    } else {
+        $tipo = "s";
+    }
+
+    $stmt->bind_param($tipo, $valor);
+    $stmt->execute();
+    $stmt->bind_result($ID);
+
+    if ($stmt->fetch()) {
+        $stmt->close();
+        return $ID;
+    } else {
+        $stmt->close();
+        return null;
+    }
+}
+
+    public function cerrarConexion() {
+        $this->conn->close();
+    }
+}
+?>

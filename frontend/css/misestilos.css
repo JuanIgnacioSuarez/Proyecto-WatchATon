@@ -1,0 +1,141 @@
+body {
+  margin: 0;
+  position: relative;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: white;
+  background-image: url('../assets/images/fondo-suave.avif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed; /* Para que el fondo no se desplace con el scroll */
+}
+
+main{
+  align-items: center;
+  justify-content: center;
+}
+
+
+.contenedor-logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+  margin-right: 20px;
+}
+
+.titulo {
+  font-size: 2.2em;
+  margin: 0;
+  color: #222;
+  font-weight: 600;
+}
+
+.navegacion a {
+  margin-left: 30px;
+  text-decoration: none;
+  color: #444;
+  font-size: 1.1em;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navegacion a:hover {
+  color: #ff6600;
+}
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.4); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  margin: auto;
+  padding: 40px;
+  border: 1px solid #ddd;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.modal-content p {
+  margin-bottom: 30px;
+  font-size: 1.4em;
+  color: #555;
+}
+
+/* Eliminado: Estilos de botones manejados por Bootstrap */
+
+.close {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.toast {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+.toast-body {
+  font-weight: bold;
+}
+
+.toast.bg-success {
+  background-color: #28a745 !important;
+}
+
+.toast.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.toast.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.toast.bg-warning {
+  background-color: #ffc107 !important;
+  color: #343a40 !important;
+}
+
+
