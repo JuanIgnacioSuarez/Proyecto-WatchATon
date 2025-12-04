@@ -1,58 +1,87 @@
-$(document).ready(function(){  //Utilizamos JQUERY para no tener que recargar la pagina y verificar que el usuario ingresa los datos de forma correcta.
-    $('#iniciar').click(function(){
-      let email=$('#email').val();
-      let contra=$('#contra').val();
-      let captcha= grecaptcha.getResponse();   //Esto se utiliza para el reCaptcha
+$(document).ready(function () {
+  // Función auxiliar para toasts personalizados
+  function showToast(message, type = 'info') {
+    const icons = {
+      success: 'bi-check-circle-fill',
+      error: 'bi-exclamation-triangle-fill',
+      warning: 'bi-exclamation-circle-fill',
+      info: 'bi-info-circle-fill'
+    };
 
-       if(captcha === "") {
-            alert("Por favor, completa el reCAPTCHA.");
-            return;  // No nos interesa seguir si el captcha no es completado
-        }
+    const icon = icons[type] || icons.info;
 
+    const toastHtml = `
+            <div class="custom-toast ${type}">
+                <i class="bi ${icon}"></i>
+                <span>${message}</span>
+            </div>
+        `;
 
-      $('#loader').show();
-      $.post('../../backend/php/verificar.php',{email:email,contra:contra,'g-recaptcha-response':captcha},function(data){  //Enviamos a un php que verifica los datos 
-        let response = JSON.parse(data);
-        switch(response.message){                 //Usamos un switch para evaluar las distintas respuestas
+    const $toast = $(toastHtml);
+    $('#toast-container').append($toast);
 
-          case "faltandatos":
-            alert("Ingrese datos en todos los campos");
+    // Eliminar después de 4 segundos
+    setTimeout(() => {
+      $toast.css('animation', 'fadeOutRight 0.4s ease-in forwards');
+      setTimeout(() => $toast.remove(), 400);
+    }, 4000);
+  }
+
+  $('#iniciar').click(function () {
+    let email = $('#email').val();
+    let contra = $('#contra').val();
+    let captcha = grecaptcha.getResponse();
+
+    if (captcha === "") {
+      showToast("Por favor, completa el reCAPTCHA.", "warning");
+      return;
+    }
+
+    $('#loader').show();
+    $.post('../../backend/php/verificar.php', { email: email, contra: contra, 'g-recaptcha-response': captcha }, function (data) {
+      let response = JSON.parse(data);
+      switch (response.message) {
+
+        case "faltandatos":
+          showToast("Ingrese datos en todos los campos", "warning");
+          $('#loader').hide();
+          break;
+
+        case "malcaptcha":
+          showToast("Ingrese el captcha correctamente", "error");
+          grecaptcha.reset();
+          $('#loader').hide();
+          break;
+
+        case "nocuenta":
+          showToast("Dominio de correo inválido", "error");
+          $('#loader').hide();
+          break;
+
+        case "bien":
+          firebase.auth().signInWithEmailAndPassword(email, contra)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              if (user.emailVerified) {
                 $('#loader').hide();
-            break;
-
-          case "malcaptcha":
-            alert("Ingrese el captcha correctamente");
-                 grecaptcha.reset();   //Reseteamos el captcha
+                showToast("¡Inicio de sesión exitoso! Redirigiendo...", "success");
+                document.cookie = "iniciado=" + email + "; path=/; max-age=" + (60 * 60 * 24 * 365 * 10) + ";";
+                setTimeout(() => {
+                  window.location.href = '../views/index.php';
+                }, 1500); // Pequeño retraso para ver el toast
+              }
+              else {
+                showToast("Por favor verifica tu correo antes de iniciar sesión", "warning");
                 $('#loader').hide();
-            break;
-
-          case "nocuenta":
-            alert("Dominio de correo invalido :(");
-                $('#loader').hide();
-            break;
-
-          case "bien":
-            firebase.auth().signInWithEmailAndPassword(email,contra)   //Llamamos a esta funcion de firebase para intentar el inicio de sesion
-              .then((userCredential)=>{
-                const user = userCredential.user;
-                   if (user.emailVerified) {
-                    $('#loader').hide();
-                  alert("Inicio de sesion exitoso , redirijiendo...");
-                    document.cookie = "iniciado=" + email + "; path=/; max-age=" + (60 * 60 * 24 * 365 * 10) + ";";  //Creo una cookie con el email
-                    window.location.href = '../views/index.php';
-                }
-                else{
-                  alert("Por favor verifica tu correo antes de iniciar sesion!");
-                  $('#loader').hide();
-                  firebase.auth().signOut();
-                }
-              })
-              .catch((error)=>{  //Aqui el inicio falla
-                alert("Cuenta inexistente");
-                $('#loader').hide();
-              });
-              break;
-          }     
-      });
+                firebase.auth().signOut();
+              }
+            })
+            .catch((error) => {
+              showToast("Correo o contraseña incorrectos", "error");
+              $('#loader').hide();
+            });
+          break;
+      }
     });
   });
+});

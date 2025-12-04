@@ -3,9 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../css/misestilos.css">
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/misestilos.css">
 		<link href="https://unpkg.com/cloudinary-video-player/dist/cld-video-player.min.css" rel="stylesheet" />
 <script src="https://unpkg.com/cloudinary-video-player/dist/cld-video-player.min.js"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -14,86 +14,119 @@
 <body class="d-flex flex-column min-vh-100">
 <?php include('../includes/cabecera.php');?>
 
-<div id="toast-container" aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1060">
-  
-</div>
+<div id="toast-container"></div>
 
-<div class="container mt-4 mb-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-10">
-      <div class="video-player-container text-center">
-        <video id="ReproductorAnuncio" class="cld-video-player d-block mx-auto" controls playsinline></video>
-        <button id="SaltarAnuncio" class="btn btn-warning btn-lg fw-bold text-dark mt-3 px-4 py-2 rounded-pill shadow-sm" disabled>Saltar anuncio en <span id="TiempoSaltar">8</span></button>
-        <video id="ReproductorVideo" class="cld-video-player d-block mx-auto mt-4 d-none" controls playsinline></video>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-10">
-      <div id="TituloDescripcion">
-        <!-- Título y descripción se cargarán aquí -->
-      </div>
-    </div>
-  </div>
-
-  <div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-10">
-      <div class="card my-4 shadow-sm">  <!--Para que el usuario añada un nuevo comentario al video-->
-        <div class="card-body">
-          <h5 class="card-title text-secondary mb-3">Agregar un comentario (Max 200 caracteres)</h5>
-          
-          <div class="mb-3">
-            <label for="nuevoComentario" class="form-label">Expresate!</label>
-            <textarea class="form-control" id="nuevoComentario" rows="3" placeholder="Escribí tu comentario aquí..."></textarea>
-          </div>
-
-          <div class="d-grid">
-            <button type="button" id="crearComentario" class="btn btn-success">
-              <i class="bi bi-send-fill"></i> Publicar comentario
+<div class="container-fluid px-4 mt-4 mb-5 flex-grow-1">
+  <div class="row g-4">
+    
+    <!-- Columna Izquierda: Video e Información -->
+    <div class="col-12 col-lg-8">
+      
+      <!-- Contenedor del Video -->
+      <div class="video-container-wrapper mb-4 rounded-4 overflow-hidden shadow-lg position-relative" style="background: #000;">
+        <div class="p-0">
+            <video id="ReproductorAnuncio" class="cld-video-player ad-player" controls playsinline></video>
+            <video id="ReproductorVideo" class="cld-video-player d-none" controls playsinline></video>
+        </div>
+        
+        <!-- Overlay para el botón de saltar anuncio -->
+        <div id="AdOverlay" class="position-absolute end-0 p-4" style="bottom: 80px; z-index: 20;">
+            <button id="SaltarAnuncio" class="btn btn-gradient fw-bold text-white px-4 py-2 rounded-pill shadow-lg border-0" disabled>
+                Saltar anuncio en <span id="TiempoSaltar">8</span>
             </button>
+        </div>
+      </div>
+
+      <!-- Información del Video (Título y Descripción) -->
+      <div class="glass-panel p-4 mb-4">
+        <div id="TituloDescripcion">
+          <!-- Se carga dinámicamente -->
+          <div class="placeholder-glow">
+            <span class="placeholder col-7 mb-2 bg-secondary"></span>
+            <span class="placeholder col-4 mb-2 bg-secondary"></span>
+            <span class="placeholder col-12 bg-secondary opacity-50"></span>
+            <span class="placeholder col-8 bg-secondary opacity-50"></span>
           </div>
         </div>
       </div>
-      <div id="Comentarios">
-        <!-- Comentarios se cargarán aquí -->
+
+    </div>
+
+    <!-- Columna Derecha: Comentarios -->
+    <div class="col-12 col-lg-4">
+      <div class="glass-panel p-0 h-100 d-flex flex-column" style="max-height: 800px;">
+        
+        <div class="p-3 border-bottom border-secondary">
+            <h5 class="text-white mb-0"><i class="bi bi-chat-dots-fill me-2 text-primary"></i>Comentarios</h5>
+        </div>
+
+        <!-- Lista de Comentarios (Scrollable) -->
+        <div id="Comentarios" class="flex-grow-1 overflow-auto p-3 custom-scrollbar" style="min-height: 300px;">
+            <!-- Se cargan dinámicamente -->
+        </div>
+
+        <!-- Formulario de Nuevo Comentario (Fijo al fondo) -->
+        <div class="p-3 border-top border-secondary bg-dark bg-opacity-25">
+             <label for="nuevoComentario" class="form-label text-white-50 small">Agregar un comentario</label>
+             <div class="d-flex gap-2">
+                <textarea class="form-control form-control-glass custom-scrollbar" id="nuevoComentario" rows="1" placeholder="Escribe algo..." style="resize: none;"></textarea>
+                <button type="button" id="crearComentario" class="btn btn-gradient btn-sm px-3">
+                  <i class="bi bi-send-fill"></i>
+                </button>
+             </div>
+             <div class="text-end mt-1">
+                 <small class="text-white-50" style="font-size: 0.7rem;">Máx 200 caracteres</small>
+             </div>
+        </div>
+
       </div>
     </div>
+
   </div>
 </div>
 
-<div class="g-recaptcha"data-sitekey="6LeSLEQrAAAAAMr6mBGkjf1yr0D2epz_Hx42akzN" data-callback="ExitoCaptcha" data-size="invisible"> </div> <!--Es el captcha inivisible-->
+<div class="g-recaptcha" data-sitekey="6LeSLEQrAAAAAMr6mBGkjf1yr0D2epz_Hx42akzN" data-callback="ExitoCaptcha" data-size="invisible"> </div>
 
 <?php include('../includes/footer.php'); ?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="../js/vervideo.js"></script>
-<script src="../js/confirm-logout.js"></script>
 
 <!-- Modal de Confirmación de Borrado de Comentario -->
-<div id="deleteCommentModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeDeleteCommentModal()">&times;</span>
-    <p>¿Estás seguro de que quieres eliminar este comentario?</p>
-    <div class="d-flex justify-content-center mt-4">
-      <button id="confirmDeleteComment" class="btn btn-danger btn-sm me-2">Eliminar</button>
-      <button id="cancelDeleteComment" class="btn btn-secondary btn-sm">Cancelar</button>
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content glass-panel border-0 text-white">
+      <div class="modal-body text-center p-4">
+        <i class="bi bi-exclamation-circle text-warning display-4 mb-3"></i>
+        <p class="mb-4">¿Estás seguro de que quieres eliminar este comentario?</p>
+        <div class="d-flex justify-content-center gap-2">
+            <button id="cancelDeleteComment" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+            <button id="confirmDeleteComment" class="btn btn-danger">Eliminar</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Modal de Edición de Comentario -->
-<div id="editCommentModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeEditCommentModal()">&times;</span>
-    <p>Editar Comentario</p>
-    <textarea id="editCommentTextarea" class="form-control mb-3" rows="4" maxlength="200"></textarea>
-    <div id="editCommentError" class="text-danger small mb-3" style="display: none;"></div>
-    <div class="d-flex justify-content-center mt-4">
-      <button id="saveEditComment" class="btn btn-success btn-sm me-2">Guardar</button>
-      <button id="cancelEditComment" class="btn btn-secondary btn-sm">Cancelar</button>
+<div class="modal fade" id="editCommentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content glass-panel border-0 text-white">
+      <div class="modal-header border-bottom border-secondary">
+        <h5 class="modal-title">Editar Comentario</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <textarea id="editCommentTextarea" class="form-control form-control-glass" rows="4" maxlength="200"></textarea>
+        <div id="editCommentError" class="text-danger small mt-2" style="display: none;"></div>
+      </div>
+      <div class="modal-footer border-top border-secondary">
+        <button id="cancelEditComment" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+        <button id="saveEditComment" class="btn btn-success">Guardar Cambios</button>
+      </div>
     </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="../js/vervideo.js"></script>
+<script src="../js/confirm-logout.js"></script>
 </body>
 </html>

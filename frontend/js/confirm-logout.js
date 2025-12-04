@@ -1,22 +1,30 @@
+// Variable para la instancia del modal
+let logoutModal;
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Inicializar el modal de Bootstrap
+  const modalElement = document.getElementById('logout-modal');
+  if (modalElement) {
+    logoutModal = new bootstrap.Modal(modalElement);
+  }
+
+  // Listener para el botón de confirmar logout
+  const confirmBtn = document.getElementById('confirm-logout');
+  if (confirmBtn) {
+    confirmBtn.addEventListener('click', function () {
+      window.location.href = '../../backend/php/cerrarSesion.php';
+    });
+  }
+});
+
 function showLogoutModal() {
-  document.getElementById('logout-modal').style.display = 'flex';
+  if (logoutModal) {
+    logoutModal.show();
+  }
 }
 
 function closeLogoutModal() {
-  document.getElementById('logout-modal').style.display = 'none';
-}
-
-document.getElementById('confirm-logout').addEventListener('click', function() {
-  window.location.href = '../../backend/php/cerrarSesion.php';
-});
-
-document.getElementById('cancel-logout').addEventListener('click', function() {
-  document.getElementById('logout-modal').style.display = 'none';
-});
-
-window.onclick = function(event) {
-  const modal = document.getElementById('logout-modal');
-  if (event.target == modal) {
-    modal.style.display = 'none';
+  if (logoutModal) {
+    logoutModal.hide();
   }
-};
+}

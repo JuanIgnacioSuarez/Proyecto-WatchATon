@@ -25,31 +25,42 @@ foreach ($yaCanjeados as $i) {
 }
 
 echo '
-<div class="text-center my-4">
-  <h2 class="fw-bold" style="color: #333;">Beneficios 🎁 </h2>
-  <p class="text-muted">Tus puntos:'.htmlspecialchars($puntosUsuario).'</p>
+<div class="glass-panel p-4 rounded-4 mb-5 fade-in-up mx-auto" style="max-width: 800px;">
+    <div class="d-inline-flex align-items-center justify-content-center p-3 rounded-circle bg-white bg-opacity-10 mb-3 border border-white border-opacity-10 shadow-lg">
+        <i class="bi bi-gift text-accent display-4"></i>
+    </div>
+    <h2 class="display-4 fw-bold text-white mb-3">Tienda de Recompensas</h2>
+    <p class="lead text-white-50 mb-0">Canjea tus puntos por premios exclusivos. <span class="badge bg-primary bg-opacity-25 border border-primary text-white ms-2">Tus puntos: '.htmlspecialchars($puntosUsuario).'</span></p>
 </div>
 <div class="row justify-content-center">';
 
-foreach($resultado as $i){        //Recorremos los beneficios y los mostramos
+foreach($resultado as $index => $i){        //Recorremos los beneficios y los mostramos
+    // Calcular retraso de animación
+    $delay = ($index * 0.1) . 's';
+    
     echo '
     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="card h-100 shadow-sm mb-4">
-        <div class="card-body">
-          <h5 class="card-title">'.htmlspecialchars($i['Descripcion']).'</h5>
-        </div>';
+      <div class="glass-panel h-100 rounded-4 overflow-hidden hover-scale fade-in-up" style="animation-delay: '.$delay.';">
+        <div class="p-4 text-center border-bottom border-white border-opacity-10">
+            <i class="bi bi-trophy-fill display-1 text-warning mb-3 d-block drop-shadow"></i>
+        </div>
+        <div class="p-4 d-flex flex-column h-100">
+          <h5 class="card-title text-white fw-bold text-center mb-4">'.htmlspecialchars($i['Descripcion']).'</h5>
+          <div class="mt-auto">';
 
-        if(in_array($i['ID_beneficio'],$beneficiosCanjeados)){       //En caso de que se encuentre en el array , significa que ya lo canejo , por lo que no puede volver a canjearlo
-            echo '<div class="card-footer bg-white border-0 text-center">
-                    <button class="btn btn-secondary w-100" disabled><i class="bi bi-check-circle"></i> Ya tienes este beneficio</button>
-                  </div>';
+        if(in_array($i['ID_beneficio'],$beneficiosCanjeados)){       //En caso de que se encuentre en el array , significa que ya lo canejo
+            echo '<button class="btn btn-secondary w-100 rounded-pill" disabled>
+                    <i class="bi bi-check-circle-fill me-2"></i>Canjeado
+                  </button>';
         } else {
-            echo '<div class="card-footer bg-white border-0 text-center">
-                    <a href="direccionbeneficio.php?id='.$i['ID_beneficio'].'" class="btn btn-success w-100">Obtener beneficio</a>
-                  </div>';
+            echo '<a href="direccionbeneficio.php?id='.$i['ID_beneficio'].'" class="btn btn-gradient w-100 rounded-pill">
+                    <i class="bi bi-cart-plus-fill me-2"></i>Canjear
+                  </a>';
         }
 
     echo ' 
+          </div>
+        </div>
       </div>
     </div>';
 }

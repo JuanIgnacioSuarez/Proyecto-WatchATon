@@ -23,5 +23,24 @@ $fin         = $_POST['fin_visualizacion'];
 $sql = "INSERT INTO bitacora_anuncios (id_usuario, id_video, id_anuncio, navegador, inicio_visualizacion, fin_visualizacion) VALUES (?, ?, ?, ?, ?, ?)";
 $tipos = "iiisss";
 $parametros = [$id_usuario, $id_video, $id_anuncio, $navegador, $inicio, $fin];
-$conexion->insertar($sql, $tipos, $parametros);  //Cargamos en la bitacora
+
+// Enable strict error reporting to catch hidden DB errors
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+try {
+    // Debug logging
+    $logEntry = date('Y-m-d H:i:s') . " - ID User: $id_usuario, ID Video: $id_video, ID Anuncio: $id_anuncio, Nav: $navegador, Inicio: $inicio, Fin: $fin" . PHP_EOL;
+    file_put_contents('debug_bitacora.txt', $logEntry, FILE_APPEND);
+
+    if ($conexion->insertar($sql, $tipos, $parametros)) {
+        echo json_encode(['success' => true, 'message' => 'Bitácora guardada']);
+    } else {
+        file_put_contents('debug_bitacora.txt', "FAILED TO INSERT (returned false)" . PHP_EOL, FILE_APPEND);
+        echo json_encode(['success' => false, 'message' => 'Error al guardar bitácora']);
+    }
+} catch (Exception $e) {
+    $errorMsg = "DB Exception: " . $e->getMessage();
+    file_put_contents('debug_bitacora.txt', $errorMsg . PHP_EOL, FILE_APPEND);
+    echo json_encode(['success' => false, 'message' => $errorMsg]);
+}
 ?>
