@@ -27,6 +27,9 @@ if ($idUsuario) {
                  $thumbnailUrl = 'https://res.cloudinary.com/dqrxdpqef/video/upload/so_1/' . $video['public_id'] . '.jpg';
             }
 
+            $isSanctioned = isset($video['sancionado']) && $video['sancionado'] == 1;
+            $sanctionBadge = $isSanctioned ? '<div class="position-absolute top-0 start-0 m-2 badge bg-danger shadow-sm"><i class="bi bi-eye-slash-fill me-1"></i>Sancionado / Oculto</div>' : '';
+
             echo '
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
               <div class="card h-100 shadow-sm mb-4 glass-panel border-0">
@@ -34,8 +37,9 @@ if ($idUsuario) {
                     <a href="vervideo.php?id_video='.$video['ID_video'].'" style="text-decoration:none; color:inherit;">
                         <img src="' . $thumbnailUrl . '" 
                              class="card-img-top img-fluid rounded-top" 
-                             style="height: 180px; object-fit: cover;"
+                             style="height: 180px; object-fit: cover; opacity: '.($isSanctioned ? '0.5' : '1').';"
                              alt="Preview del video">
+                        '.$sanctionBadge.'
                     </a>
                     <div class="position-absolute top-0 end-0 m-2 d-flex gap-2">
                         <button class="btn btn-light btn-sm rounded-circle shadow-sm btn-editar-video" 

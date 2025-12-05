@@ -177,6 +177,9 @@ $(document).ready(function () {
           showToast("Inicie sesión para poder subir un video", 'info');
           window.location.href = '../views/IniciarSesion.php';
           break;
+        case "sancionado":
+          showToast("Cuenta sancionada: No puedes subir videos.", 'error');
+          break;
       }
     });
   });

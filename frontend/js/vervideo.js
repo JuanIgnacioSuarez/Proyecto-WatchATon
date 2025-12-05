@@ -53,8 +53,9 @@ window.ExitoCaptcha = function (token) {  //El captcha nos devuelve un token  qu
       $.post('../../backend/php/sumarPuntos.php', {}, function (data) {   //Esto nos devolvera la cantidad de puntos que se sumaron , si es 0 , sabemos que el usuario no esta iniciado 
         if (data > 0) {
           showToast("Sumaste " + data + " puntos!", 'success');
-        }
-        else {
+        } else if (data == -1) {
+          showToast("Cuenta sancionada: No puedes sumar puntos.", 'error');
+        } else {
           showToast("Inicia sesion para empezar a acumular puntos", 'info');
         }
         reproducirVideoPrincipal();
@@ -186,6 +187,7 @@ $(document).ready(function () {
 
       if (data.length > 0) {
         data.forEach(comment => {
+          const showDropdown = comment.es_autor || esAdmin;
           let commentHtml = `
             <div class="d-flex gap-3 mb-3 p-2 rounded hover-bg-glass">
                 <div class="flex-shrink-0">
@@ -200,14 +202,20 @@ $(document).ready(function () {
                                 ${comment.correo}
                             </a>
                         </h6>
-                        ${comment.es_autor ? `
+                        ${showDropdown ? `
                         <div class="dropdown">
                             <button class="btn btn-link text-white-50 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                                ${comment.es_autor ? `
                                 <li><a class="dropdown-item edit-comment" href="#" data-id-comentario="${comment.id_comentario}" data-content="${comment.contenido}"><i class="bi bi-pencil me-2"></i>Editar</a></li>
                                 <li><a class="dropdown-item delete-comment text-danger" href="#" data-id-comentario="${comment.id_comentario}"><i class="bi bi-trash me-2"></i>Eliminar</a></li>
+                                ` : ''}
+                                ${esAdmin ? `
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item sanction-comment text-warning" href="#" data-id-comentario="${comment.id_comentario}"><i class="bi bi-shield-exclamation me-2"></i>Sancionar</a></li>
+                                ` : ''}
                             </ul>
                         </div>
                         ` : ''}
@@ -231,6 +239,12 @@ $(document).ready(function () {
           const commentId = $(this).data('id-comentario');
           const content = $(this).data('content');
           showEditCommentModal(commentId, content);
+        });
+
+        $('.sanction-comment').off('click').on('click', function (e) {
+          e.preventDefault();
+          const commentId = $(this).data('id-comentario');
+          openSanctionModal(commentId, 'comment');
         });
 
       } else {              //En caso de no tener ningun comentario
@@ -283,6 +297,9 @@ $(document).ready(function () {
           break;
 
         case "noiniciado": showToast("Inicie sesion para poder comentar!", 'info');
+          break;
+
+        case "sancionado": showToast("Cuenta sancionada: No puedes comentar.", 'error');
           break;
       }
     });
@@ -344,3 +361,91 @@ $(document).ready(function () {
 $('#editCommentTextarea').on('input', function () {
   $('#editCommentError').hide();
 });
+
+// --- Lógica de Administración ---
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+const esAdmin = getCookie('es_admin') === 'true';
+let sanctionModalInstance;
+
+$(document).ready(function () {
+  sanctionModalInstance = new bootstrap.Modal(document.getElementById('sanctionModal'));
+
+  if (esAdmin) {
+    // Inyectar botón de sancionar video
+    // Esperamos un poco a que cargue la descripción o usamos un intervalo/evento
+    // Como es .load(), podemos usar el callback del load si lo modificamos, pero aquí lo haremos con un observer o timeout simple
+    setTimeout(() => {
+      $('#TituloDescripcion').append(`
+                <div class="mt-3 border-top border-secondary pt-3">
+                    <button id="btnSanctionVideo" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-shield-exclamation me-2"></i>Administrar / Sancionar Video
+                    </button>
+                </div>
+            `);
+
+      $('#btnSanctionVideo').on('click', function () {
+        openSanctionModal(idVideo, 'video');
+      });
+    }, 1000); // Esperar a que cargue el contenido dinámico
+  }
+
+  // Manejo del formulario de sanción
+  $('#sanctionForm').on('submit', function (e) {
+    e.preventDefault();
+
+    const targetId = $('#sanctionTargetId').val();
+    const targetType = $('#sanctionTargetType').val();
+    const reason = $('#sanctionReason').val();
+    const description = $('#sanctionDescription').val();
+    const applySanction = $('#applySanction').is(':checked') ? 1 : 0;
+
+    if (!reason) {
+      showToast('Por favor seleccione un motivo', 'warning');
+      return;
+    }
+
+    $.post('../../backend/php/admin_actions.php', {
+      action: 'sanction',
+      targetId: targetId,
+      targetType: targetType,
+      reason: reason,
+      description: description,
+      applySanction: applySanction
+    }, function (response) {
+      if (response.success) {
+        showToast(response.message, 'success');
+        sanctionModalInstance.hide();
+
+        if (targetType === 'video') {
+          setTimeout(() => window.location.href = 'index.php', 1500);
+        } else {
+          loadComments(); // Recargar comentarios
+        }
+      } else {
+        showToast(response.message || 'Error al procesar la solicitud', 'error');
+      }
+    }, 'json').fail(function () {
+      showToast('Error de conexión con el servidor', 'error');
+    });
+  });
+});
+
+function openSanctionModal(id, type) {
+  $('#sanctionTargetId').val(id);
+  $('#sanctionTargetType').val(type);
+  $('#sanctionReason').val('');
+  $('#sanctionDescription').val('');
+  $('#applySanction').prop('checked', false);
+
+  // Actualizar título o texto según tipo
+  const title = type === 'video' ? 'Sancionar Video' : 'Sancionar Comentario';
+  $('#sanctionModal .modal-title').text(title);
+
+  sanctionModalInstance.show();
+}

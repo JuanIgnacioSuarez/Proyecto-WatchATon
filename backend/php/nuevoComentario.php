@@ -3,7 +3,11 @@ require_once('../classes/Conexion.php');
 $conexion = new Conexion();
 
 if(isset($_COOKIE['iniciado'])){
-    if(strlen($_POST['comentario']) <= 200 && strlen($_POST['comentario'])>0){  //Verificamos el largo 
+    $sanciones = $conexion->verificarSanciones($_COOKIE['iniciado']);
+    
+    if ($sanciones >= 3) {
+        echo "sancionado";
+    } elseif(strlen($_POST['comentario']) <= 200 && strlen($_POST['comentario'])>0){  //Verificamos el largo 
         $IDusuario = $conexion->existeDato('usuarios','ID','Correo',$_COOKIE['iniciado']);
 
         $sql = "INSERT INTO comentarios (id_usuario, id_video, contenido) VALUES ( ?, ?, ?)";

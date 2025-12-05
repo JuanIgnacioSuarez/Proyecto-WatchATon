@@ -125,6 +125,52 @@
   </div>
 </div>
 
+<!-- Modal de Sanción (Admin) -->
+<div class="modal fade" id="sanctionModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content glass-panel border-0 text-white">
+      <div class="modal-header border-bottom border-secondary">
+        <h5 class="modal-title">Sancionar / Eliminar Contenido</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form id="sanctionForm">
+            <input type="hidden" id="sanctionTargetId" name="targetId">
+            <input type="hidden" id="sanctionTargetType" name="targetType"> <!-- 'video' or 'comment' -->
+
+            <div class="mb-3">
+                <label for="sanctionReason" class="form-label">Motivo</label>
+                <select class="form-select form-control-glass" id="sanctionReason" required>
+                    <option value="" selected disabled>Seleccione un motivo...</option>
+                    <option value="Spam">Spam / Publicidad no deseada</option>
+                    <option value="Contenido Inapropiado">Contenido Inapropiado / NSFW</option>
+                    <option value="Acoso">Acoso / Discurso de Odio</option>
+                    <option value="Derechos de Autor">Infracción de Derechos de Autor</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="sanctionDescription" class="form-label">Descripción (Opcional)</label>
+                <textarea class="form-control form-control-glass" id="sanctionDescription" rows="3" maxlength="300" placeholder="Detalles adicionales..."></textarea>
+            </div>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="applySanction">
+                <label class="form-check-label" for="applySanction">
+                    Aplicar Sanción (Strike) al usuario
+                </label>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="../js/vervideo.js"></script>
 <script src="../js/confirm-logout.js"></script>

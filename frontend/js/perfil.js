@@ -2,7 +2,7 @@ $(document).ready(function () {
     // Función para mostrar la sección y actualizar el estado activo del menú
     function showSection(sectionId, buttonId) {
         // Oculta todas las secciones de contenido con fade out rápido y elimina la animación de entrada
-        $('#mis-videos-content, #mi-info-content, #mi-cuenta-content').addClass('d-none').removeClass('fade-in-up');
+        $('#mis-videos-content, #mi-info-content, #mi-cuenta-content, #mis-sanciones-content').addClass('d-none').removeClass('fade-in-up');
 
         // Muestra la sección deseada con animación de entrada
         $(sectionId).removeClass('d-none').addClass('fade-in-up');
@@ -27,6 +27,73 @@ $(document).ready(function () {
         e.preventDefault();
         showSection('#mi-cuenta-content', '#btn-mi-cuenta');
     });
+
+    $('#btn-mis-sanciones').on('click', function (e) {
+        e.preventDefault();
+        showSection('#mis-sanciones-content', '#btn-mis-sanciones');
+        loadSanctions();
+    });
+
+    // Cargar sanciones
+    function loadSanctions() {
+        $.getJSON('../../backend/php/cargarSanciones.php', function (data) {
+            if (data.error) {
+                $('#lista-sanciones').html('<div class="text-center text-danger">' + data.error + '</div>');
+                return;
+            }
+
+            $('#total-sanciones-count').text(data.totalActive);
+
+            // Actualizar color del contador según gravedad
+            if (data.totalActive >= 3) {
+                $('#total-sanciones-count').removeClass('text-white').addClass('text-danger');
+            } else if (data.totalActive > 0) {
+                $('#total-sanciones-count').removeClass('text-white').addClass('text-warning');
+            }
+
+            let html = '';
+            if (data.sanciones.length === 0) {
+                html = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-shield-check display-1 text-success opacity-50"></i>
+                        <h4 class="mt-3 text-white">¡Estás limpio!</h4>
+                        <p class="text-white-50">No tienes ninguna sanción en tu historial. ¡Sigue así!</p>
+                    </div>
+                `;
+            } else {
+                data.sanciones.forEach(s => {
+                    const isActive = s.tipo == 1;
+                    const statusBadge = isActive
+                        ? '<span class="badge bg-danger">Activa (Strike)</span>'
+                        : '<span class="badge bg-secondary">Inactiva / Advertencia</span>';
+
+                    const originalContent = s.contenido_original
+                        ? `<div class="mt-2 p-2 bg-black bg-opacity-25 rounded border border-secondary border-opacity-25">
+                             <small class="text-white-50 d-block mb-1">Contenido eliminado:</small>
+                             <span class="text-white fst-italic">"${s.contenido_original}"</span>
+                           </div>`
+                        : '';
+
+                    html += `
+                        <div class="glass-panel p-3 rounded border ${isActive ? 'border-danger border-opacity-50' : 'border-secondary border-opacity-25'}">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="fw-bold text-white mb-0"><span class="text-white-50 fw-normal">Motivo:</span> ${s.motivo}</h5>
+                                ${statusBadge}
+                            </div>
+                            <p class="text-white-50 mb-2 small"><strong class="text-white">Notas:</strong> ${s.descripcion}</p>
+                            ${originalContent}
+                            <div class="text-end mt-2">
+                                <small class="text-white-50"><i class="bi bi-calendar3 me-1"></i>${s.fecha}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            $('#lista-sanciones').html(html);
+        }).fail(function () {
+            $('#lista-sanciones').html('<div class="text-center text-danger">Error al cargar sanciones.</div>');
+        });
+    }
 
     // Cargar videos del usuario al iniciar
     loadUserVideos();

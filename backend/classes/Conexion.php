@@ -55,6 +55,29 @@ class Conexion {
         return $datos;
     }
 
+    // Método para ejecutar consultas sin parámetros (CREATE, ALTER, etc.)
+    public function ejecutar($sql) {
+        return $this->conn->query($sql);
+    }
+
+    // Verificar sanciones activas (tipo 1)
+    public function verificarSanciones($email) {
+        // Primero obtenemos el ID del usuario
+        $idUsuario = $this->existeDato('usuarios', 'ID', 'Correo', $email);
+        
+        if (!$idUsuario) return 0;
+
+        $sql = "SELECT COUNT(*) as total FROM sanciones WHERE id_usuario = ? AND tipo = 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $fila = $resultado->fetch_assoc();
+        $stmt->close();
+        
+        return $fila['total'];
+    }
+
     //Esta funcion permite  saber si un dato esta o no en la base
     public function existeDato($tabla, $campo1, $campo2, $valor) {
     $sql = "SELECT $campo1 FROM $tabla WHERE $campo2 = ?";

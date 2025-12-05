@@ -17,11 +17,11 @@ if ($correo_usuario_actual) {
 }
 
 // Buscar comentarios y su usuario para ese video
-$sql = "SELECT c.id_comentario, c.contenido, c.id_usuario AS id_usuario, u.Correo, u.nombre_usuario, u.public_id_perfil 
-        FROM comentarios c 
-        INNER JOIN usuarios u ON c.id_usuario = u.ID 
-        WHERE c.id_video = ? 
-        ORDER BY c.id_comentario DESC";
+    $sql = "SELECT c.id_comentario, c.contenido, c.id_usuario AS id_usuario, u.Correo, u.nombre_usuario, u.public_id_perfil 
+            FROM comentarios c 
+            JOIN usuarios u ON c.id_usuario = u.ID 
+            WHERE c.id_video = ? AND c.sancionado = 0
+            ORDER BY c.id_comentario DESC";
 
 $tipos = "d";
 $parametros = [$_POST['idVideo']];

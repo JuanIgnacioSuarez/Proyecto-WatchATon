@@ -12,17 +12,21 @@ if ($_POST['ID'] == "" || $_POST['Url'] == "" || $_POST['titulo'] == "" || $_POS
             echo "noiniciado";
         } else {
             $email = $_COOKIE['iniciado'];
-            $ID_usuario = $conexion->existeDato('usuarios', 'ID', 'Correo', $email);  //Verifico que exista el usuario 
+            $sanciones = $conexion->verificarSanciones($email);
 
-            if ($ID_usuario != null) {
-                $sql = "INSERT INTO videos (ID_usuario, public_id, Url, Titulo, Descripcion, public_id_portada) VALUES (?, ?, ?, ?, ?, ?)";
-                $tipos = "isssss";
-                $parametros = [  $ID_usuario, $_POST['ID'],$_POST['Url'],$_POST['titulo'],$_POST['descripcion'], $_POST['portadaID']];
+            if ($sanciones >= 3) {
+                echo "sancionado";
+            } else {
+                $ID_usuario = $conexion->existeDato('usuarios', 'ID', 'Correo', $email);  //Verifico que exista el usuario 
 
-                if ($conexion->insertar($sql, $tipos, $parametros)) {
+                if ($ID_usuario != null) {
+                    $sql = "INSERT INTO videos (ID_usuario, public_id, Url, Titulo, Descripcion, public_id_portada) VALUES (?, ?, ?, ?, ?, ?)";
+                    $tipos = "isssss";
+                    $parametros = [  $ID_usuario, $_POST['ID'],$_POST['Url'],$_POST['titulo'],$_POST['descripcion'], $_POST['portadaID']];
 
-
-                    echo "bien";
+                    if ($conexion->insertar($sql, $tipos, $parametros)) {
+                        echo "bien";
+                    }
                 }
             }
         }

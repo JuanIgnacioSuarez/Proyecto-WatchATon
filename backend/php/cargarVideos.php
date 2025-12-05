@@ -6,10 +6,10 @@ $conexion = new Conexion();
 $titulo = $_POST['titulo'];
 
 if ($titulo == "") {
-    $sql = "SELECT * FROM videos";
+    $sql = "SELECT * FROM videos WHERE sancionado = 0";
     $resultado = $conexion->consultar($sql);
 } else {
-    $sql = "SELECT * FROM videos WHERE titulo LIKE ?";  //Usamos el like para que aparezcan tantos videos como titulos tengan parecidos a la busqueda
+    $sql = "SELECT * FROM videos WHERE titulo LIKE ? AND sancionado = 0";  //Usamos el like para que aparezcan tantos videos como titulos tengan parecidos a la busqueda
     $tipos = "s";
     $busqueda = "%$titulo%";
     $parametros = [$busqueda];

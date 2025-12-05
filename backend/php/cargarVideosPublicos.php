@@ -9,7 +9,7 @@ if (!$idUsuario) {
     exit;
 }
 
-$sql = "SELECT * FROM videos WHERE ID_usuario = ?";
+$sql = "SELECT * FROM videos WHERE ID_usuario = ? AND sancionado = 0";
 $tipos = "i";
 $parametros = [$idUsuario];
 $resultado = $conexion->consultar($sql, $tipos, $parametros);

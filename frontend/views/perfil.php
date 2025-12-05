@@ -1,38 +1,5 @@
 <?php
-require_once('../../backend/classes/Conexion.php');
-$conexion = new Conexion();
-
-// Verificar sesión
-if (!isset($_COOKIE['iniciado'])) {
-    header("Location: IniciarSesion.php");
-    exit();
-}
-
-$email = $_COOKIE['iniciado'];
-$id_usuario = $conexion->existeDato('usuarios', 'ID', 'Correo', $email);
-
-// Obtener datos del usuario
-// Obtener datos del usuario
-$sql = "SELECT nombre_usuario, public_id_perfil, biografia FROM usuarios WHERE ID = ?";
-$tipos = "i";
-$parametros = [$id_usuario];
-$datosUsuario = $conexion->consultar($sql, $tipos, $parametros);
-
-$nombreUsuario = $datosUsuario[0]['nombre_usuario'] ?? null;
-$publicIdPerfil = $datosUsuario[0]['public_id_perfil'] ?? null;
-$biografia = $datosUsuario[0]['biografia'] ?? null;
-
-// Lógica para el nombre de usuario (default: correo)
-$displayName = $nombreUsuario ? htmlspecialchars($nombreUsuario) : htmlspecialchars($email);
-
-// Lógica para la biografía
-$displayBio = $biografia ? htmlspecialchars($biografia) : "";
-
-// Lógica para la foto de perfil (default: logo)
-$profilePicUrl = "../assets/images/logo.jpg";
-if ($publicIdPerfil) {
-    $profilePicUrl = "https://res.cloudinary.com/dqrxdpqef/image/upload/c_fill,h_150,w_150,q_auto,f_auto/" . htmlspecialchars($publicIdPerfil);
-}
+require_once('../../backend/php/logica_perfil.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -49,87 +16,7 @@ if ($publicIdPerfil) {
   <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-auth.js"></script>
   <script src="../js/firebase-config.js"></script>
   <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
-  <style>
-    /* Estilos personalizados del diseño del tablero */
-    .dashboard-container {
-        display: flex;
-        min-height: calc(100vh - 80px); /* Ajustar según la altura del encabezado */
-    }
 
-    .dashboard-sidebar {
-        width: 280px;
-        flex-shrink: 0;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
-        padding: 2rem 1rem;
-    }
-
-    .dashboard-content {
-        flex-grow: 1;
-        padding: 1rem;
-        overflow-x: hidden; /* Evitar desplazamiento horizontal */
-    }
-
-    .profile-nav-link {
-        color: rgba(255, 255, 255, 0.7);
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-        display: flex;
-        align-items: center;
-        padding: 0.8rem 1rem;
-        margin-bottom: 0.5rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .profile-nav-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        transform: translateX(5px);
-    }
-    .profile-nav-link.active {
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), transparent);
-        color: white;
-        border-left: 3px solid #3b82f6;
-        border-radius: 0 10px 10px 0;
-    }
-    .profile-nav-link i {
-        font-size: 1.2rem;
-        min-width: 24px; /* Asegurar espaciado de iconos */
-    }
-    
-    .profile-avatar-container {
-        position: relative;
-        display: inline-block;
-    }
-    .profile-avatar-glow {
-        position: absolute;
-        top: -3px;
-        left: -3px;
-        right: -3px;
-        bottom: -3px;
-        border-radius: 50%;
-        background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
-        z-index: -1;
-        filter: blur(8px);
-        opacity: 0.7;
-    }
-
-    /* Ajustes responsivos */
-    @media (max-width: 991.98px) {
-        .dashboard-container {
-            flex-direction: column;
-        }
-        .dashboard-sidebar {
-            width: 100%;
-            border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-        }
-    }
-  </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
   <!-- Fondo Animado -->
@@ -165,6 +52,10 @@ if ($publicIdPerfil) {
             <a href="#" class="profile-nav-link" id="btn-mi-cuenta">
                 <i class="bi bi-gear me-3 text-warning"></i>
                 <span>Mi cuenta</span>
+            </a>
+            <a href="#" class="profile-nav-link" id="btn-mis-sanciones">
+                <i class="bi bi-exclamation-triangle me-3 text-danger"></i>
+                <span>Mis Sanciones</span>
             </a>
         </nav>
       </aside>
@@ -265,6 +156,26 @@ if ($publicIdPerfil) {
                         </button>
                     </div>
                 </div>
+            </div>
+          </div>
+
+          <!-- Contenido de "Mis Sanciones" -->
+          <div id="mis-sanciones-content" class="d-none fade-in-up">
+            <h3 class="text-white fw-bold mb-4">Historial de Sanciones</h3>
+            
+            <div class="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 text-white mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-circle-fill fs-1 me-3"></i>
+                    <div>
+                        <h5 class="alert-heading fw-bold mb-1">Estado de la Cuenta</h5>
+                        <p class="mb-0">Tienes <strong id="total-sanciones-count" class="fs-4">0</strong> sanciones activas (Strikes).</p>
+                        <small class="opacity-75">Recuerda que al llegar a 3 sanciones, tu cuenta será limitada.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lista-sanciones" class="d-flex flex-column gap-3">
+                <!-- Se cargan dinámicamente -->
             </div>
           </div>
 
