@@ -14,15 +14,21 @@ if (isset($_COOKIE['iniciado'])) {
     $id_usuario = 0;
 }
 
-$id_video    = $_POST['id_video'];
-$id_anuncio  = $_POST['id_anuncio'];
-$navegador   = $_POST['navegador'];
-$inicio      = $_POST['inicio_visualizacion'];
-$fin         = $_POST['fin_visualizacion'];
+$id_video    = $_POST['id_video'] ?? 0;
+$id_anuncio  = $_POST['id_anuncio'] ?? 0;
+$navegador   = $_POST['navegador'] ?? 'Desconocido';
+$inicio      = $_POST['inicio_visualizacion'] ?? '';
+$fin         = $_POST['fin_visualizacion'] ?? '';
 
-$sql = "INSERT INTO bitacora_anuncios (id_usuario, id_video, id_anuncio, navegador, inicio_visualizacion, fin_visualizacion) VALUES (?, ?, ?, ?, ?, ?)";
-$tipos = "iiisss";
-$parametros = [$id_usuario, $id_video, $id_anuncio, $navegador, $inicio, $fin];
+// Nuevos campos
+$estado      = $_POST['estado'] ?? 'desconocido';
+$click       = isset($_POST['click']) ? intval($_POST['click']) : 0;
+$dispositivo = $_POST['dispositivo'] ?? 'desconocido';
+$porcentaje  = isset($_POST['porcentaje_visto']) ? intval($_POST['porcentaje_visto']) : 0;
+
+$sql = "INSERT INTO bitacora_anuncios (id_usuario, id_video, id_anuncio, navegador, inicio_visualizacion, fin_visualizacion, estado, click, dispositivo, porcentaje_visto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$tipos = "iiissssisi"; // i=int, s=string, i=int, i=int ... count: i(id_u), i(id_v), i(id_a), s(nav), s(ini), s(fin), s(est), i(cli), s(dev), i(por) = 10
+$parametros = [$id_usuario, $id_video, $id_anuncio, $navegador, $inicio, $fin, $estado, $click, $dispositivo, $porcentaje];
 
 // Enable strict error reporting to catch hidden DB errors
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);

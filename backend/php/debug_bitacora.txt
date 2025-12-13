@@ -1,0 +1,4 @@
+2025-12-05 22:29:00 - ID User: 2, ID Video: 6, ID Anuncio: 1, Nav: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36, Inicio: 2025-12-05 21:28:38, Fin: 2025-12-05 21:29:00
+2025-12-05 22:29:24 - ID User: 2, ID Video: 6, ID Anuncio: 1, Nav: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36, Inicio: 2025-12-05 21:29:15, Fin: 2025-12-05 21:29:24
+2025-12-05 22:55:53 - ID User: 2, ID Video: 3, ID Anuncio: 1, Nav: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36, Inicio: 2025-12-05 21:55:37, Fin: 2025-12-05 21:55:53
+2025-12-13 20:35:47 - ID User: 2, ID Video: 6, ID Anuncio: 2, Nav: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36, Inicio: 2025-12-13 19:35:37, Fin: 2025-12-13 19:35:47

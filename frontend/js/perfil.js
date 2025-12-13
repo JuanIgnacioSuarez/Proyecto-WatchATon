@@ -2,7 +2,7 @@ $(document).ready(function () {
     // Función para mostrar la sección y actualizar el estado activo del menú
     function showSection(sectionId, buttonId) {
         // Oculta todas las secciones de contenido con fade out rápido y elimina la animación de entrada
-        $('#mis-videos-content, #mi-info-content, #mi-cuenta-content, #mis-sanciones-content').addClass('d-none').removeClass('fade-in-up');
+        $('#mis-videos-content, #mi-info-content, #mi-cuenta-content, #mis-sanciones-content, #mis-canjes-content').addClass('d-none').removeClass('fade-in-up');
 
         // Muestra la sección deseada con animación de entrada
         $(sectionId).removeClass('d-none').addClass('fade-in-up');
@@ -33,6 +33,49 @@ $(document).ready(function () {
         showSection('#mis-sanciones-content', '#btn-mis-sanciones');
         loadSanctions();
     });
+
+    $('#btn-mis-canjes').on('click', function (e) {
+        e.preventDefault();
+        showSection('#mis-canjes-content', '#btn-mis-canjes');
+        loadMyRedemptions();
+    });
+
+    // Cargar historial de canjes
+    function loadMyRedemptions() {
+        $.getJSON('../../backend/php/cargarMisCanjes.php', function (data) {
+            const $tbody = $('#lista-canjes-body');
+            const $noDataMsg = $('#no-canjes-msg');
+
+            $tbody.empty();
+            if (!data || data.length === 0 || data.error) {
+                $noDataMsg.removeClass('d-none');
+                return;
+            }
+
+            $noDataMsg.addClass('d-none');
+
+            let html = '';
+            data.forEach(item => {
+                const isExternal = item.enlace && (item.enlace.startsWith('http') || item.enlace.startsWith('www'));
+                const icon = isExternal ? '<i class="bi bi-globe me-2 text-info"></i>' : '<i class="bi bi-trophy-fill me-2 text-warning"></i>';
+
+                html += `
+                    <tr>
+                        <td class="text-white-50">${item.Fecha}</td>
+                        <td class="text-white fw-bold">
+                            ${icon} ${item.Descripcion}
+                        </td>
+                        <td><span class="badge bg-secondary bg-opacity-25 text-white border border-secondary">${item.Tipo}</span></td>
+                        <td class="text-center text-white-50 fw-bold">${item.Valor} pts</td>
+                    </tr>
+                `;
+            });
+            $tbody.html(html);
+
+        }).fail(function () {
+            $('#lista-canjes-body').html('<tr><td colspan="4" class="text-center text-danger">Error al cargar historial.</td></tr>');
+        });
+    }
 
     // Cargar sanciones
     function loadSanctions() {

@@ -7,10 +7,27 @@ let reproductor;
 let currentCommentIdToDelete = null;
 let currentCommentIdToEdit = null;
 
+// Variables para metricas
 let inicioVisualizacionAnuncio = null;
 let finVisualizacionAnuncio = null;
-let navegador = navigator.userAgent; //Conseguimos el navegador del cliente
+let navegador = navigator.userAgent;
 let idAnuncioActual = null;
+
+let anuncioClick = 0;
+let anuncioEstado = "desconocido";
+let anuncioPorcentaje = 0;
+
+function detectDevice() {
+  const ua = navigator.userAgent;
+  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+    return "Tablet";
+  }
+  else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+    return "Movil";
+  }
+  return "Escritorio";
+}
+let dispositivoTipo = detectDevice();
 
 // Variables globales para el contador del anuncio
 let segundos = 8; // Tiempo inicial para saltar el anuncio
@@ -71,10 +88,21 @@ window.ExitoCaptcha = function (token) {  //El captcha nos devuelve un token  qu
 
 
 window.reproducirVideoPrincipal = function () {  //Funcion para cargar el video principal 
-  finVisualizacionAnuncio = new Date().toISOString().slice(0, 19).replace('T', ' '); //Guardamos cuando termina el anuncio
-  reproductoranuncio.dispose();           //Destruimos el reproductor del anuncio
-  $('#SaltarAnuncio').parent().hide();	            //Ocultamos el contenedor del boton de saltar
-  $('#ReproductorVideo').removeClass('d-none'); //Le quitamos la clase que lo oculta
+  finVisualizacionAnuncio = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+  // Calcular porcentaje visto (asegurar que no pase de 100)
+  if (reproductoranuncio) {
+    const duration = reproductoranuncio.duration();
+    const current = reproductoranuncio.currentTime();
+    if (duration > 0) {
+      anuncioPorcentaje = Math.round((current / duration) * 100);
+    }
+    if (anuncioPorcentaje > 100) anuncioPorcentaje = 100;
+  }
+
+  reproductoranuncio.dispose();
+  $('#SaltarAnuncio').parent().hide();
+  $('#ReproductorVideo').removeClass('d-none');
 
   $.post('../../backend/php/RecuperarPublic_id.php', { idVideo: idVideo }, function (data) {
     $.post('../../backend/php/guardarBitacora.php', {
@@ -82,13 +110,17 @@ window.reproducirVideoPrincipal = function () {  //Funcion para cargar el video 
       id_anuncio: idAnuncioActual,
       navegador: navegador,
       inicio_visualizacion: inicioVisualizacionAnuncio,
-      fin_visualizacion: finVisualizacionAnuncio
+      fin_visualizacion: finVisualizacionAnuncio,
+      estado: anuncioEstado,
+      click: anuncioClick,
+      dispositivo: dispositivoTipo,
+      porcentaje_visto: anuncioPorcentaje
     }, function (response) {
       console.log("Bitácora guardada:", response);
     }).fail(function (xhr, status, error) {
       console.error("Error al guardar bitácora:", error);
     });
-    reproductor.source(data);   //Cargamos el reproductos con el video apropiado
+    reproductor.source(data);
   });
 }
 
@@ -270,15 +302,23 @@ $(document).ready(function () {
     }
   });
 
-  reproductoranuncio.on('ended', function () { //Podemos comprobar si el anuncio finalizo por completo
-    stopTimer(); // Detener el contador si el anuncio termina
-    grecaptcha.execute();  //grecaptcha es parte de la api de reCaptcha , permite justamente que se active el captcha
+  reproductoranuncio.on('ended', function () {
+    stopTimer();
+    anuncioEstado = "completado";
+    anuncioPorcentaje = 100;
+    grecaptcha.execute();
+  });
+
+  // Detectar clic en el anuncio (si el reproductor lo permite en su config, o wrapper)
+  // Cloudinary player a veces captura clicks. Intentamos evento 'click'.
+  // Nota: Cloudinary Video Player wrap puede interceptar, pero intentaremos:
+  $('#ReproductorAnuncio').on('click', function () {
+    anuncioClick = 1;
   });
 
 
-
-
   $('#SaltarAnuncio').click(function () {
+    anuncioEstado = "saltado";
     reproducirVideoPrincipal();
   });
 

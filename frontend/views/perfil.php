@@ -16,7 +16,7 @@ require_once('../../backend/php/logica_perfil.php');
   <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-auth.js"></script>
   <script src="../js/firebase-config.js"></script>
   <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
-
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
   <!-- Fondo Animado -->
@@ -56,6 +56,10 @@ require_once('../../backend/php/logica_perfil.php');
             <a href="#" class="profile-nav-link" id="btn-mis-sanciones">
                 <i class="bi bi-exclamation-triangle me-3 text-danger"></i>
                 <span>Mis Sanciones</span>
+            </a>
+            <a href="#" class="profile-nav-link" id="btn-mis-canjes">
+                <i class="bi bi-gift me-3 text-success"></i>
+                <span>Mis Canjes</span>
             </a>
         </nav>
       </aside>
@@ -176,6 +180,31 @@ require_once('../../backend/php/logica_perfil.php');
 
             <div id="lista-sanciones" class="d-flex flex-column gap-3">
                 <!-- Se cargan dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Contenido de "Mis Canjes" -->
+          <div id="mis-canjes-content" class="d-none fade-in-up">
+            <h3 class="text-white fw-bold mb-4">Historial de Canjes</h3>
+            
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-glass align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-white-50">Fecha</th>
+                            <th scope="col" class="text-white-50">Recompensa</th>
+                            <th scope="col" class="text-white-50">Tipo</th>
+                            <th scope="col" class="text-center text-white-50">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-canjes-body">
+                        <!-- Carga dinámica -->
+                    </tbody>
+                </table>
+                <div id="no-canjes-msg" class="text-center text-white-50 py-4 d-none">
+                    <i class="bi bi-basket display-4 opacity-50 mb-3 d-block"></i>
+                    Aún no has canjeado recompensas.
+                </div>
             </div>
           </div>
 

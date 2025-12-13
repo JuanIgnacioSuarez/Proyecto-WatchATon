@@ -15,7 +15,7 @@ if ($idUsuario) {
     // Asumimos que los mensajes globales tienen id_destinatario = 0
     $sql = "SELECT id_mensaje, titulo, contenido, tipo, fecha, leido, id_destinatario 
             FROM mensajes 
-            WHERE id_destinatario = ? OR id_destinatario = 0 
+            WHERE id_destinatario = ? OR id_destinatario = 0 OR id_destinatario IS NULL 
             ORDER BY fecha DESC";
     $tipos = "i";
     $parametros = [$idUsuario];
