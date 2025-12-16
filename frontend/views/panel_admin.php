@@ -257,6 +257,16 @@ require_once('../../backend/php/verificar_sesion_admin.php');
 
                 </div>
 
+                <!-- Distribución Premium -->
+                <div class="col-md-6">
+                    <div class="glass-panel p-3 h-100">
+                        <h5 class="text-white mb-3">Distribución Premium Activos</h5>
+                         <div style="height: 250px;">
+                            <canvas id="chart-premium-stats"></canvas>
+                        </div>
+                    </div>
+                </div>
+
 
 
                 <!-- Tiempo Total Visto -->

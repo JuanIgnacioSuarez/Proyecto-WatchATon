@@ -10,6 +10,10 @@ $(document).ready(function () {
         // Actualiza las clases activas del menú de navegación
         $('.profile-nav-link').removeClass('active');
         $(buttonId).addClass('active');
+
+        // Update Navbar Sub-title
+        const sectionName = $(buttonId).text().trim();
+        $('#nav-sub-title').text(' > ' + sectionName);
     }
 
     // Eventos de click para los botones del menú lateral

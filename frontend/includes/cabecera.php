@@ -1,11 +1,40 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <header class="glass-header sticky-top">
-  <div class="container d-flex flex-wrap align-items-center justify-content-between py-3">
+  <div class="container-fluid px-5 d-flex flex-wrap align-items-center justify-content-between py-3">
     <div class="d-flex align-items-center">
-      <a href="../views/landing.php" class="d-flex align-items-center text-decoration-none">
+      <a href="../views/landing.php" class="d-flex align-items-center text-decoration-none" style="position: relative; top: -5px;">
         <img src="../assets/images/logo.jpg" alt="Logo" width="50" height="50" class="rounded-circle me-3">
         <h1 class="h4 m-0 brand-text">WatchATon</h1>
       </a>
+      
+      <?php
+        $archivoActual = basename($_SERVER['PHP_SELF']);
+        $tituloPagina = '';
+        
+        switch($archivoActual) {
+            case 'landing.php': $tituloPagina = 'Inicio'; break;
+            case 'perfil.php': $tituloPagina = 'Mi Perfil'; break;
+            case 'perfilPublico.php': $tituloPagina = 'Perfil Público'; break;
+            case 'SubirVideo.php': $tituloPagina = 'Subir Video'; break;
+            case 'vervideo.php': $tituloPagina = 'Reproductor'; break;
+            case 'Canjear.php': $tituloPagina = 'Recompensas'; break;
+            case 'comprar_premium.php': $tituloPagina = 'Premium'; break;
+            case 'IniciarSesion.php': $tituloPagina = 'Login'; break;
+            case 'CrearCuenta.php': $tituloPagina = 'Registro'; break;
+            case 'panel_admin.php': $tituloPagina = 'Admin'; break;
+            case 'index.php': $tituloPagina = 'Bienvenida'; break;
+            case 'directrices.php': $tituloPagina = 'Directrices'; break;
+        }
+
+        if ($tituloPagina):
+      ?>
+          <div class="vr ms-4 me-3 text-white opacity-50"></div>
+          <span id="nav-page-indicator" class="badge bg-secondary bg-opacity-25 text-white fw-light fs-6 px-3 py-2 rounded-pill border border-secondary border-opacity-25 mb-1">
+              <i class="bi bi-geo-alt-fill me-1 text-warning"></i> 
+              <span id="nav-main-title"><?php echo $tituloPagina; ?></span>
+              <span id="nav-sub-title" class="fw-normal text-info opacity-75"></span>
+          </span>
+      <?php endif; ?>
     </div>
     <nav class="nav align-items-center">
       <?php 

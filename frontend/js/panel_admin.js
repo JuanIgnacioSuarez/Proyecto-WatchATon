@@ -8,6 +8,10 @@ $(document).ready(function () {
         $('.nav-link-admin').removeClass('active');
         $(this).addClass('active');
 
+        // Update Navbar Sub-title
+        const sectionName = $(this).text().trim();
+        $('#nav-sub-title').text(' > ' + sectionName);
+
         $('.section-content').addClass('d-none');
         $(`#section-${section}`).removeClass('d-none');
 
@@ -459,6 +463,7 @@ $(document).ready(function () {
     let chartTopAds = null;
     let chartTopAdvertisers = null;
     let chartTopRedemptions = null;
+    let chartPremiumStats = null;
 
     function initDashboard() {
         const today = new Date();
@@ -494,7 +499,7 @@ $(document).ready(function () {
         $.post('../../backend/php/admin/obtener_estadisticas_avanzadas.php', {
             fecha_inicio: start,
             fecha_fin: end,
-            id_anunciante: advertiserCtx
+            filtro_id: advertiserCtx // Renamed to avoid AdBlocker trigger
         }, function (res) {
             $('#btn-refresh-stats i').removeClass('spin-anim');
             if (res.success) {
@@ -507,9 +512,17 @@ $(document).ready(function () {
                 renderTopRedemptions(res.top_redemptions);
                 renderTopAdvertisers(res.top_advertisers);
                 renderTimeStats(res.time_advertiser, res.time_ad);
+                if (res.premium_stats) renderPremiumStats(res.premium_stats);
             }
-        }, 'json').fail(() => {
+        }, 'json').fail((jqXHR, textStatus, errorThrown) => {
             $('#btn-refresh-stats i').removeClass('spin-anim');
+            console.error("Error loading stats:", textStatus, errorThrown);
+            // Detect AdBlocker (status 0 or error)
+            if (jqXHR.status === 0 || textStatus === 'error') {
+                showToast('Error de conexión. Si usas AdBlock, desactívalo.', 'danger');
+            } else {
+                showToast('Error al cargar estadísticas.', 'danger');
+            }
         });
 
         $.getJSON('../../backend/php/admin/get_stats.php', function (data) {
@@ -692,6 +705,39 @@ $(document).ready(function () {
         if (m > 0 || h > 0) str += `${m}m `;
         str += `${s}s`;
         return str;
+    }
+
+    function renderPremiumStats(data) {
+        const ctx = document.getElementById('chart-premium-stats').getContext('2d');
+        if (chartPremiumStats) chartPremiumStats.destroy();
+
+        const pagados = parseInt(data.pagados || 0);
+        const puntos = parseInt(data.puntos || 0);
+        const total = pagados + puntos;
+
+        // Si no hay datos, mostrar 'Sin datos' visualmente o chart vacio
+        const labels = total > 0 ? ['Pagado', 'Puntos'] : ['Sin datos'];
+        const dataset = total > 0 ? [pagados, puntos] : [1];
+        const colors = total > 0 ? ['#0d6efd', '#ffc107'] : ['#495057'];
+
+        chartPremiumStats = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: dataset,
+                    backgroundColor: colors,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, cutout: '60%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#fff' } },
+                    tooltip: { enabled: total > 0 }
+                }
+            }
+        });
     }
 
     // ==========================================
