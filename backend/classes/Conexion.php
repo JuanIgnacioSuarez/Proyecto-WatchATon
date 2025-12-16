@@ -6,7 +6,7 @@ class Conexion {
         $host = "localhost";
         $user = "root";
         $pass = "";
-        $db   = "proyectowebbd";
+        $db   = "watchaton";
 
         $this->conn = new mysqli($host, $user, $pass, $db);
 
@@ -22,6 +22,11 @@ class Conexion {
         $resultado = $stmt->execute();
         $stmt->close();
         return $resultado;
+    }
+
+    // Método para obtener el último ID insertado
+    public function ultimoId() {
+        return $this->conn->insert_id;
     }
 
     // Método para actualizar

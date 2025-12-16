@@ -11,6 +11,15 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 	<title>WAT Video</title>
 </head>
+<style>
+  /* Force modal z-index to be higher than everything else */
+  .modal-backdrop {
+    z-index: 10050 !important;
+  }
+  .modal {
+    z-index: 10055 !important;
+  }
+</style>
 <body class="d-flex flex-column min-vh-100">
 <?php include('../includes/cabecera.php');?>
 
@@ -41,13 +50,8 @@
       <div class="glass-panel p-4 mb-4">
         <div id="TituloDescripcion">
           <!-- Se carga dinámicamente -->
-          <div class="placeholder-glow">
-            <span class="placeholder col-7 mb-2 bg-secondary"></span>
-            <span class="placeholder col-4 mb-2 bg-secondary"></span>
-            <span class="placeholder col-12 bg-secondary opacity-50"></span>
-            <span class="placeholder col-8 bg-secondary opacity-50"></span>
-          </div>
         </div>
+
       </div>
 
     </div>
@@ -123,7 +127,11 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
+
+
+
 
 <!-- Modal de Sanción (Admin) -->
 <div class="modal fade" id="sanctionModal" tabindex="-1" aria-hidden="true">
@@ -171,8 +179,14 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="../js/vervideo.js"></script>
+
+<!-- Modal de Confirmación de Descarga (Movido al final para evitar problemas de Z-Index) -->
+
+
+<script>
+    const esAdmin = <?php echo isset($esAdmin) && $esAdmin ? 'true' : 'false'; ?>;
+</script>
+<script src="../js/vervideo.js?v=<?php echo time(); ?>"></script>
 <script src="../js/confirm-logout.js"></script>
 </body>
 </html>

@@ -57,6 +57,10 @@ require_once('../../backend/php/logica_perfil.php');
                 <i class="bi bi-exclamation-triangle me-3 text-danger"></i>
                 <span>Mis Sanciones</span>
             </a>
+            <a href="#" class="profile-nav-link" id="btn-mi-suscripcion">
+                <i class="bi bi-star me-3 text-warning"></i>
+                <span>Mi Suscripción</span>
+            </a>
             <a href="#" class="profile-nav-link" id="btn-mis-canjes">
                 <i class="bi bi-gift me-3 text-success"></i>
                 <span>Mis Canjes</span>
@@ -163,7 +167,114 @@ require_once('../../backend/php/logica_perfil.php');
             </div>
           </div>
 
-          <!-- Contenido de "Mis Sanciones" -->
+          <!-- Contenido de "Mi Suscripción" -->
+          <div id="mi-suscripcion-content" class="d-none fade-in-up">
+            <h3 class="text-white fw-bold mb-4">Mi Suscripción</h3>
+            
+            <?php if ($esPremium): ?>
+                <!-- Estado Premium Activo -->
+                <div class="card border-0 shadow-lg mb-4" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
+                    <div class="card-body p-4 position-relative overflow-hidden">
+                        
+                        <div class="d-flex align-items-center mb-4 position-relative z-2">
+                             <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+                                <i class="bi bi-trophy-fill text-warning fs-2"></i>
+                             </div>
+                             <div>
+                                 <h4 class="text-white fw-bold mb-1">Membresía Premium</h4>
+                                 <span class="badge bg-success text-white fw-bold px-3 py-2 rounded-pill">
+                                     <i class="bi bi-check-circle-fill me-1"></i>ACTIVA
+                                 </span>
+                             </div>
+                        </div>
+                        
+                        <div class="row g-4 position-relative z-2">
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-3" style="background: rgba(255,255,255,0.05);">
+                                    <small class="text-white-50 d-block mb-1">Vence el</small>
+                                    <p class="text-white fs-4 fw-bold mb-0"><?php echo $fechaVencimientoFormatted; ?></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-3" style="background: rgba(255,255,255,0.05);">
+                                    <small class="text-white-50 d-block mb-1">Beneficios Activos</small>
+                                    <ul class="list-unstyled mb-0 text-white-50 small">
+                                        <li><i class="bi bi-check text-success me-1"></i>Insignia Dorada</li>
+                                        <li><i class="bi bi-check text-success me-1"></i>Soporte Prioritario</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Botones ocultos si está activo -->
+                    </div>
+                </div>
+
+            <?php elseif ($estaVencido): ?>
+                <!-- Estado Premium Vencido -->
+                <div class="card border-0 shadow-lg mb-4" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); border-left: 4px solid #dc3545 !important;">
+                    <div class="card-body p-4 position-relative overflow-hidden">
+                        
+                        <div class="d-flex align-items-center mb-4 position-relative z-2">
+                             <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+                                <i class="bi bi-exclamation-triangle-fill text-danger fs-2"></i>
+                             </div>
+                             <div>
+                                 <h4 class="text-white fw-bold mb-1">Membresía Premium</h4>
+                                 <span class="badge bg-danger text-white fw-bold px-3 py-2 rounded-pill">
+                                     <i class="bi bi-x-circle-fill me-1"></i>VENCIDA
+                                 </span>
+                             </div>
+                        </div>
+                        
+                        <div class="row g-4 position-relative z-2 mb-4">
+                            <div class="col-md-12">
+                                <div class="p-3 rounded-3" style="background: rgba(220, 53, 69, 0.1);">
+                                    <p class="text-white mb-0">
+                                        Tu suscripción venció el <strong class="text-danger"><?php echo $fechaVencimientoFormatted; ?></strong>. 
+                                        ¡Renuévala ahora para recuperar tus beneficios!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 position-relative z-2">
+                            <a href="../views/comprar_premium.php" class="btn btn-warning fw-bold rounded-pill px-4">
+                                <i class="bi bi-arrow-repeat me-2"></i>Renovar Ahora
+                            </a>
+                            <a href="../views/Canjear.php" class="btn btn-outline-light rounded-pill px-4">
+                                <i class="bi bi-gift me-2"></i>Canjear Puntos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            <?php else: ?>
+                <!-- Estado Plan Gratuito (Nunca fue premium o hace mucho tiempo) -->
+                <div class="card border-0 shadow-lg mb-4 bg-secondary">
+                    <div class="card-body p-5 text-center position-relative overflow-hidden">
+                        
+                        <div class="position-relative z-1">
+                            <div class="bg-dark bg-opacity-50 d-inline-block p-3 rounded-circle mb-3">
+                                <i class="bi bi-person text-white-50 fs-1"></i>
+                            </div>
+                            <h4 class="text-white fw-bold">Plan Gratuito</h4>
+                            <p class="text-white-50 mb-4 max-w-md mx-auto">
+                                Estás disfrutando de WatchATon gratis. ¿Quieres destacar y apoyar a la comunidad?
+                            </p>
+                            
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <a href="../views/comprar_premium.php" class="btn btn-warning btn-lg fw-bold rounded-pill px-5 shadow-sm hover-scale">
+                                    <i class="bi bi-star-fill me-2"></i>Hazte Premium
+                                </a>
+                                <a href="../views/Canjear.php" class="btn btn-outline-light btn-lg fw-bold rounded-pill px-4 shadow-sm hover-scale">
+                                    <i class="bi bi-gift me-2"></i>Canjear
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+          </div>
           <div id="mis-sanciones-content" class="d-none fade-in-up">
             <h3 class="text-white fw-bold mb-4">Historial de Sanciones</h3>
             

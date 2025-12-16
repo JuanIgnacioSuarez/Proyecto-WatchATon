@@ -28,15 +28,32 @@ else{
 			// Verificar si es admin
 			require_once('../classes/Conexion.php');
 			$conexion = new Conexion();
-			$sql = "SELECT Permisos FROM usuarios WHERE Correo = ?";
+			$sql = "SELECT ID, Permisos FROM usuarios WHERE Correo = ?";
 			$datos = $conexion->consultar($sql, "s", [$_POST['email']]);
 			
 			$es_admin = false;
-			if (!empty($datos) && $datos[0]['Permisos'] == 1) {
-				$es_admin = true;
+			$es_premium = false;
+
+			if (!empty($datos)) {
+				if ($datos[0]['Permisos'] == 1) {
+					$es_admin = true;
+				}
+
+				// Verificar si es Premium (Tiene canjeo con ID_beneficio = 0)
+				$idUsuario = $datos[0]['ID'];
+				$sqlPremium = "SELECT COUNT(*) as total FROM canjeos WHERE ID_usuario = ? AND ID_beneficio = 0";
+				$resPremium = $conexion->consultar($sqlPremium, "i", [$idUsuario]);
+				
+                // LOGGING
+                $logMsg = date('Y-m-d H:i:s') . " - User: " . $_POST['email'] . " | ID: " . $idUsuario . " | Total Premium 0: " . print_r($resPremium, true) . "\n";
+                file_put_contents(__DIR__ . '/debug_login.log', $logMsg, FILE_APPEND);
+
+				if (!empty($resPremium) && $resPremium[0]['total'] > 0) {
+					$es_premium = true;
+				}
 			}
 			
-			 echo json_encode(['status' => 'success', 'message' => 'bien', 'es_admin' => $es_admin]);
+			 echo json_encode(['status' => 'success', 'message' => 'bien', 'es_admin' => $es_admin, 'es_premium' => $es_premium]);
 		}
 		else{
 			 echo json_encode(['status' => 'error', 'message' => 'nocuenta']);

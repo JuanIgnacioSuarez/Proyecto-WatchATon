@@ -9,8 +9,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function initNotifications($) {
     $(document).ready(function () {
+        console.log("Notificaciones: Iniciando...");
+        // Re-inicializar dropdowns de bootstrap explícitamente si es necesario
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        });
+
         // Solo cargar si el elemento existe (usuario logueado)
-        if ($('#notificacionesDropdown').length) {
+        const $dropdownToggle = $('#notificacionesDropdown');
+        if ($dropdownToggle.length) {
+            console.log("Notificaciones: Dropdown encontrado.");
+
+            // Inicializar explícitamente Bootstrap Dropdown para este elemento
+            // ya que puede no tener la clase .dropdown-toggle
+            const dropdownInstance = new bootstrap.Dropdown($dropdownToggle[0]);
+
+            // Debug click y Toggle Manual
+            $dropdownToggle.on('click', function (e) {
+                console.log("Click en campana detectado");
+                e.preventDefault();
+                e.stopPropagation();
+                dropdownInstance.toggle();
+            });
+
             loadNotifications();
 
             // Recargar cada 60 segundos

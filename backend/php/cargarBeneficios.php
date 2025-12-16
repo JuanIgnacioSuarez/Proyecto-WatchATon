@@ -19,8 +19,12 @@ if (isset($_COOKIE['iniciado'])) {
         // Buscar los puntos del usuario
         $puntosUsuario = $conexion->existeDato('usuarios', 'Puntos', 'ID', $id_usuario) ?? 0;
 
-        // Buscar todos los beneficios que ya canjeó el usuario
-        $sql = "SELECT ID_beneficio FROM canjeos WHERE ID_usuario = ?";
+        // Buscar todos los beneficios que ya canjeó el usuario (excluyendo los pagados con dinero)
+        // Solo bloqueamos si fue canjeado por puntos. Si fue comprado, permitimos canjear por puntos si el usuario quiere.
+        $sql = "SELECT c.ID_beneficio 
+                FROM canjeos c 
+                LEFT JOIN pagos p ON c.ID_canjeo = p.id_canje 
+                WHERE c.ID_usuario = ? AND p.id_pago IS NULL";
         $tipos = "i";
         $parametros = [$id_usuario];
         $yaCanjeados = $conexion->consultar($sql, $tipos, $parametros);

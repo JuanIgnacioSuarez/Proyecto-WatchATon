@@ -73,6 +73,12 @@ $(document).ready(function () {
                   document.cookie = "es_admin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
                 }
 
+                if (response.es_premium) {
+                  document.cookie = "Premium=true; path=/; max-age=" + (60 * 60 * 24 * 365 * 10) + ";";
+                } else {
+                  document.cookie = "Premium=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+                }
+
                 setTimeout(() => {
                   window.location.href = '../views/index.php';
                 }, 1500); // Pequeño retraso para ver el toast

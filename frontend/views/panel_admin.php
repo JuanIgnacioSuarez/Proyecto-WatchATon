@@ -627,6 +627,11 @@ require_once('../../backend/php/verificar_sesion_admin.php');
                   <input type="text" class="form-control form-control-glass" id="enlace-beneficio" required>
               </div>
 
+              <div class="mb-3">
+                  <label class="form-label text-white-50">Duración (Días) <small class="text-white-50">(Vacio = Infinito)</small></label>
+                  <input type="number" class="form-control form-control-glass" id="duracion-beneficio" min="1" placeholder="Ej: 30">
+              </div>
+
 
               <button type="submit" class="btn btn-gradient w-100 rounded-pill">Guardar</button>
           </form>
@@ -670,6 +675,11 @@ require_once('../../backend/php/verificar_sesion_admin.php');
               <div class="mb-3">
                   <label class="form-label text-white-50">Enlace</label>
                   <input type="text" class="form-control form-control-glass" id="edit-enlace-beneficio">
+              </div>
+
+              <div class="mb-3">
+                  <label class="form-label text-white-50">Duración (Días) <small class="text-white-50">(Vacio = Infinito)</small></label>
+                  <input type="number" class="form-control form-control-glass" id="edit-duracion-beneficio" min="1" placeholder="Ej: 30">
               </div>
 
 

@@ -707,6 +707,7 @@ $(document).ready(function () {
             if (Array.isArray(data)) {
                 data.forEach(b => {
                     const isExternal = b.enlace && (b.enlace.startsWith('http') || b.enlace.startsWith('www'));
+                    const duracionTxt = b.dias_duracion ? `<br><span class="badge bg-secondary bg-opacity-50 small font-monospace">${b.dias_duracion} días</span>` : '';
 
                     const actionsHtml = `
                         <td class="text-end">
@@ -715,7 +716,8 @@ $(document).ready(function () {
                                 data-tipo="${b.id_tipo}" 
                                 data-desc="${b.Descripcion}" 
                                 data-valor="${b.Valor}" 
-                                data-enlace="${b.enlace || ''}">
+                                data-enlace="${b.enlace || ''}"
+                                data-duracion="${b.dias_duracion || ''}">
                                 <i class="bi bi-pencil"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-danger btn-delete-beneficio" data-id="${b.ID_beneficio}">
@@ -727,7 +729,10 @@ $(document).ready(function () {
                         <tr>
                             <td class="text-white-50">${b.ID_beneficio}</td>
                             <td class="text-info">${b.nombre_tipo}</td>
-                            <td class="text-white">${b.Descripcion}</td>
+                            <td class="text-white">
+                                ${b.Descripcion}
+                                ${duracionTxt}
+                            </td>
                             <td class="text-white font-monospace">${b.Valor} pts</td>
                             ${isExternal ? `<td class="text-white-50 small text-truncate" style="max-width: 150px;">${b.enlace || '-'}</td>` : ''}
                             ${actionsHtml}
@@ -766,6 +771,7 @@ $(document).ready(function () {
         const $desc = $('#descripcion-beneficio');
         const $valor = $('#valor-beneficio');
         const $enlace = $('#enlace-beneficio');
+        const $duracion = $('#duracion-beneficio');
 
         let isValid = true;
         if (!validateField($tipo, "Selecciona un tipo")) isValid = false;
@@ -780,7 +786,8 @@ $(document).ready(function () {
             id_tipo: $tipo.val(),
             descripcion: $desc.val(),
             valor: $valor.val(),
-            enlace: $enlace.val()
+            enlace: $enlace.val(),
+            dias_duracion: $duracion.val()
         }, function (res) {
             if (res.success) {
                 $('#addBeneficioModal').modal('hide');
@@ -799,12 +806,14 @@ $(document).ready(function () {
         const desc = $(this).data('desc');
         const valor = $(this).data('valor');
         const enlace = $(this).data('enlace');
+        const duracion = $(this).data('duracion');
 
         $('#edit-id-beneficio').val(id);
         $('#edit-select-tipo-beneficio').val(tipo);
         $('#edit-descripcion-beneficio').val(desc);
         $('#edit-valor-beneficio').val(valor);
         $('#edit-enlace-beneficio').val(enlace);
+        $('#edit-duracion-beneficio').val(duracion);
 
         $('#editBeneficioModal').modal('show');
     });
@@ -816,6 +825,7 @@ $(document).ready(function () {
         const $desc = $('#edit-descripcion-beneficio');
         const $valor = $('#edit-valor-beneficio');
         const $enlace = $('#edit-enlace-beneficio');
+        const $duracion = $('#edit-duracion-beneficio');
 
         let isValid = true;
         if (!validateField($tipo, "Selecciona un tipo")) isValid = false;
@@ -831,7 +841,8 @@ $(document).ready(function () {
             id_tipo: $tipo.val(),
             descripcion: $desc.val(),
             valor: $valor.val(),
-            enlace: $enlace.val()
+            enlace: $enlace.val(),
+            dias_duracion: $duracion.val()
         }, function (res) {
             if (res.success) {
                 $('#editBeneficioModal').modal('hide');

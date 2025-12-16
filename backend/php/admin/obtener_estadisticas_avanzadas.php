@@ -20,18 +20,9 @@ $idAnunciante = $_POST['id_anunciante'] ?? '';
 $whereClause = "WHERE DATE(inicio_visualizacion) BETWEEN '$fechaInicio' AND '$fechaFin'";
 
 if (!empty($idAnunciante)) {
-    // Si filtramos por anunciante, debemos asegurarnos de que la bitacora tenga el id_anuncio correcto
-    // que pertenezca a ese anunciante. La bitacora tiene id_anuncio.
-    // Hacemos subconsulta o join si fuera necesario filtrar por 'id_anunciante' de la tabla 'anuncios'.
-    // Pero la bitacora guarda 'id_anuncio'.
-    // Primero obtenemos los IDs de anuncios de ese anunciante
     $sqlIds = "SELECT ID_anuncio FROM anuncios WHERE id_anunciante = $idAnunciante";
-    // Esto es un poco hacky, mejor un JOIN implícito en las consultas.
-    // Mejor: Agregamos un string para JOIN y modificamos el WHERE
 }
 
-// Para simplificar, inyectaremos el filtro de anunciante en cada consulta específica usando JOIN si es necesario.
-// OJO: La bitácora tiene `id_anuncio`. Podemos hacer JOIN con `anuncios` para filtrar por `id_anunciante`.
 
 $joinAnuncios = "";
 $condicionAnunciante = "";
@@ -61,7 +52,6 @@ $sqlDevices = "SELECT b.dispositivo, COUNT(*) as total
 $resDevices = $conexion->consultar($sqlDevices);
 
 // --- 3. Retención (Completado vs Saltado) ---
-// Filtramos solo los que tienen estado conocido (ignoramos 'desconocido' para la gráfica o lo incluimos como otro)
 $sqlRetention = "SELECT b.estado, COUNT(*) as total 
                  FROM bitacora_anuncios b
                  $joinAnuncios
@@ -157,8 +147,6 @@ $sqlTimeAd = "SELECT a.nombre, SUM(TIMESTAMPDIFF(SECOND, b.inicio_visualizacion,
 $resTimeAd = $conexion->consultar($sqlTimeAd);
 
 // --- 9. Top Recompensas Canjeadas ---
-// No aplicamos el filtro de fecha/anunciante aquí estrictamente porque 'canjeos' no tiene esos campos directamente,
-// pero si quisiéramos filtrar por fecha de canje:
 $whereCanjes = "WHERE DATE(c.Fecha) BETWEEN '$fechaInicio' AND '$fechaFin'";
 $sqlTopRedemptions = "SELECT b.Descripcion, COUNT(*) as total
                       FROM canjeos c

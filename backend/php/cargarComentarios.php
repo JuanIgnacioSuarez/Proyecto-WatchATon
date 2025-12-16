@@ -46,6 +46,7 @@ if (count($resultado) > 0) {
             'id_comentario' => $i['id_comentario'],
             'id_usuario' => $i['id_usuario'],
             'contenido' => htmlspecialchars($i['contenido']),
+            'contenido_raw' => $i['contenido'],
             'correo' => htmlspecialchars($nombreMostrar), // Usamos 'correo' para mantener compatibilidad con JS, pero enviamos el nombre
             'foto_perfil' => htmlspecialchars($fotoPerfilUrl),
             'es_autor' => $es_autor

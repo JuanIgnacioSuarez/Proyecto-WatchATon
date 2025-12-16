@@ -133,82 +133,7 @@ main {
 }
 
 /* Estilo del Modal */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: #1e293b;
-  color: var(--text-main);
-  margin: auto;
-  padding: 40px;
-  border: 1px solid var(--glass-border);
-  width: 90%;
-  max-width: 500px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  text-align: center;
-  position: relative;
-  animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.modal-content p {
-  margin-bottom: 30px;
-  font-size: 1.25em;
-  color: var(--text-main);
-}
-
-.close {
-  color: var(--text-muted);
-  position: absolute;
-  top: 20px;
-  right: 25px;
-  font-size: 24px;
-  transition: color 0.2s;
-  background: transparent;
-  border: none;
-}
-
-.close:hover {
-  color: var(--text-main);
-  cursor: pointer;
-}
-
-/* Botones dentro del modal (sobreescribiendo bootstrap ligeramente para consistencia si es necesario, 
-   pero confiar en las clases de bootstrap está bien también) */
-.btn-custom-danger {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-.btn-custom-danger:hover {
-  background-color: var(--danger);
-  color: white;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
+/* Custom modal styles removed to prevent conflict with Bootstrap */
 
 /* Notificaciones Toast */
 .toast {
@@ -925,4 +850,60 @@ body.admin-body {
   }
 }
 
-```
+/* Premium UI Elements */
+.premium-crown-container {
+  position: relative;
+  display: inline-block !important;
+  overflow: visible !important;
+}
+
+.premium-crown {
+  position: absolute;
+  top: -20px;
+  right: -15px;
+  /* Moved slightly out */
+  font-size: 1.8rem;
+  /* Slightly larger */
+  color: #fbbf24;
+  /* Amber 400 */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  /* Better contrast */
+  animation: float-crown 3s ease-in-out infinite;
+  z-index: 9999;
+  /* Confirmed visibility */
+  display: block !important;
+}
+
+/* Ajustes específicos para sidebar */
+.dashboard-sidebar .premium-crown {
+  top: -15px;
+  right: 5px;
+  font-size: 1.4rem;
+}
+
+/* Ajustes para avatar grande */
+#mi-info-content .premium-crown {
+  top: -25px;
+  right: 20px;
+  font-size: 2.5rem;
+}
+
+/* Ajuste para Navbar */
+.nav-link-custom .premium-crown-badge {
+  font-size: 1rem;
+  color: #fbbf24;
+  margin-left: 5px;
+  animation: float-crown 3s ease-in-out infinite;
+}
+
+@keyframes float-crown {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(5deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(-5deg);
+  }
+}

@@ -32,4 +32,28 @@ $profilePicUrl = "../assets/images/logo.jpg";
 if ($publicIdPerfil) {
     $profilePicUrl = "https://res.cloudinary.com/dqrxdpqef/image/upload/c_fill,h_150,w_150,q_auto,f_auto/" . htmlspecialchars($publicIdPerfil);
 }
+
+// --- Lógica de Suscripción Premium ---
+$esPremium = false;
+$estaVencido = false;
+$fechaVencimientoFormatted = null;
+
+// Buscar la fecha de vencimiento más lejana (mejor beneficio)
+$sqlPremium = "SELECT MAX(fecha_vencimiento) as ultima_fecha FROM canjeos WHERE ID_usuario = ? AND ID_beneficio = 0";
+$resPremium = $conexion->consultar($sqlPremium, "i", [$id_usuario]);
+
+if (!empty($resPremium) && !empty($resPremium[0]['ultima_fecha'])) {
+    $fechaVencimiento = new DateTime($resPremium[0]['ultima_fecha']);
+    $fechaActual = new DateTime();
+    
+    // Formato para mostrar: 16/12/2025
+    $fechaVencimientoFormatted = $fechaVencimiento->format('d/m/Y');
+
+    if ($fechaVencimiento > $fechaActual) {
+        $esPremium = true;
+    } else {
+        // Si existe fecha pero ya pasó, está vencido
+        $estaVencido = true;
+    }
+}
 ?>

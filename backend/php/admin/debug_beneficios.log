@@ -1,0 +1,20 @@
+Array
+(
+    [accion] => edit
+    [id] => 0
+    [id_tipo] => 2
+    [descripcion] => Premium
+    [valor] => 5000000
+    [enlace] => asd
+    [dias_duracion] => 
+)
+Array
+(
+    [accion] => edit
+    [id] => 0
+    [id_tipo] => 2
+    [descripcion] => Premium
+    [valor] => 5000000
+    [enlace] => asd
+    [dias_duracion] => 30
+)

@@ -19,8 +19,8 @@ if (empty($id_beneficio)) {
 $id_usuario = $conexion->existeDato('usuarios', 'ID', 'correo', $_COOKIE['iniciado']);
 $puntosUsuario = $conexion->existeDato('usuarios', 'Puntos', 'ID', $id_usuario);
 
-// Obtener Beneficio
-$sql = "SELECT Valor FROM beneficios WHERE ID_beneficio = ?";
+// Obtener Beneficio y duración
+$sql = "SELECT Valor, dias_duracion FROM beneficios WHERE ID_beneficio = ?";
 $resBeneficio = $conexion->consultar($sql, "i", [$id_beneficio]);
 
 if (count($resBeneficio) == 0) {
@@ -29,6 +29,7 @@ if (count($resBeneficio) == 0) {
 }
 
 $costo = $resBeneficio[0]['Valor'];
+$diasDuracion = $resBeneficio[0]['dias_duracion'];
 
 // Verificar Puntos
 if ($puntosUsuario < $costo) {
@@ -36,9 +37,11 @@ if ($puntosUsuario < $costo) {
     exit;
 }
 
-// Verificar si ya fue canjeado (opcional, pero buena práctica si los beneficios son únicos)
-// Asumimos que se puede canjear solo una vez según la lógica visual anterior checkeando canjeos
-$sqlCheck = "SELECT ID_canjeo FROM canjeos WHERE ID_usuario = ? AND ID_beneficio = ?";
+// Verificar si ya fue canjeado POR PUNTOS (excluyendo pagos)
+$sqlCheck = "SELECT c.ID_canjeo 
+             FROM canjeos c 
+             LEFT JOIN pagos p ON c.ID_canjeo = p.id_canje 
+             WHERE c.ID_usuario = ? AND c.ID_beneficio = ? AND p.id_pago IS NULL";
 $check = $conexion->consultar($sqlCheck, "ii", [$id_usuario, $id_beneficio]);
 
 if (count($check) > 0) {
@@ -53,9 +56,16 @@ try {
     $sqlUpdate = "UPDATE usuarios SET Puntos = ? WHERE ID = ?";
     $conexion->actualizar($sqlUpdate, "ii", [$nuevosPuntos, $id_usuario]);
 
-    // 2. Registrar Canje
-    $sqlInsert = "INSERT INTO canjeos (ID_usuario, ID_beneficio, Fecha) VALUES (?, ?, NOW())";
-    $conexion->actualizar($sqlInsert, "ii", [$id_usuario, $id_beneficio]);
+    // 2. Registrar Canje con Vencimiento
+    // Calcular fecha vencimiento si aplica
+    $fechaVencimiento = null;
+    if (!empty($diasDuracion) && is_numeric($diasDuracion)) {
+        $fechaVencimiento = date('Y-m-d H:i:s', strtotime("+$diasDuracion days"));
+    }
+
+    $sqlInsert = "INSERT INTO canjeos (ID_usuario, ID_beneficio, Fecha, fecha_vencimiento) VALUES (?, ?, NOW(), ?)";
+    // Insertar vencimiento (puede ser null)
+    $conexion->actualizar($sqlInsert, "iis", [$id_usuario, $id_beneficio, $fechaVencimiento]);
 
     echo json_encode(['success' => true, 'nuevos_puntos' => $nuevosPuntos]);
 

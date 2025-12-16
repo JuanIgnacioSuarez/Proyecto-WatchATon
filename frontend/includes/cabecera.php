@@ -70,6 +70,14 @@
       <?php  
         if(isset($_COOKIE['iniciado'])){           //Si la sesion esta iniciado mostramos esto 
           echo '<a href="../views/Canjear.php" class="nav-link-custom"><i class="bi bi-gift me-2"></i>Canjear recompensas!</a>';
+          
+          // Mostrar botón Premium solo si NO es premium
+          if (!isset($_COOKIE['Premium']) || $_COOKIE['Premium'] !== 'true') {
+              echo '<a href="../views/comprar_premium.php" class="btn btn-warning fw-bold me-2 px-3 shadow-sm d-flex align-items-center rounded-pill" style="background: linear-gradient(45deg, #FFD700, #FDB931); border: none; color: #000;">';
+              echo '<i class="bi bi-star-fill me-2"></i>Hazte Premium';
+              echo '</a>';
+          }
+
           echo '<a href="perfil.php" class="nav-link-custom"><i class="bi bi-person-circle me-2"></i>Mi perfil</a>';
           echo '<a href="../views/SubirVideo.php" class="nav-link-custom"><i class="bi bi-cloud-arrow-up me-2"></i>Subir un video</a>';
           echo '<a href="#" id="logout-button" class="nav-link-custom text-danger" onclick="showLogoutModal()"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a>';
@@ -99,4 +107,5 @@
     </div>
   </div>
 </div>
-<script src="../js/notificaciones.js"></script>
+<script src="../js/notificaciones.js?v=<?php echo time(); ?>"></script>
+<script src="../js/premium_ui.js"></script>

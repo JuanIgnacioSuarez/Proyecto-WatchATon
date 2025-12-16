@@ -75,6 +75,7 @@ function loadBeneficios() {
                             <div class="badge bg-white bg-opacity-10 border border-white border-opacity-25 text-white fs-6 px-3 py-2 rounded-pill mt-2">
                                 ${item.Valor} Puntos
                             </div>
+                            ${item.dias_duracion ? `<div class="badge bg-info bg-opacity-10 border border-info border-opacity-25 text-info fs-7 px-3 py-1 rounded-pill mt-2 d-block mx-auto" style="width: fit-content;">Duración: ${item.dias_duracion} días</div>` : ''}
                         </div>
                         <div class="p-4 d-flex flex-column flex-grow-1">
                             <h4 class="card-title text-white fw-bold text-center mb-3">${item.Descripcion}</h4>
