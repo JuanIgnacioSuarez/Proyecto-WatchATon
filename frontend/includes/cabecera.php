@@ -109,7 +109,7 @@
 
           echo '<a href="perfil.php" class="nav-link-custom"><i class="bi bi-person-circle me-2"></i>Mi perfil</a>';
           echo '<a href="../views/SubirVideo.php" class="nav-link-custom"><i class="bi bi-cloud-arrow-up me-2"></i>Subir un video</a>';
-          echo '<a href="#" id="logout-button" class="nav-link-custom text-danger" onclick="showLogoutModal()"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a>';
+          echo '<a href="#" id="logout-button" class="btn btn-danger ms-2 rounded-pill px-3 fw-bold" onclick="showLogoutModal()"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a>';
         } else {
           echo '<a href="../views/IniciarSesion.php" class="nav-link-custom">Iniciar sesión</a>';
         }

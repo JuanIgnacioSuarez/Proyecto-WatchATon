@@ -51,27 +51,26 @@ require_once '../includes/cabecera.php';
 
     <!-- Sección 1: Quienes Somos -->
     <section class="landing-section" id="quienes-somos">
-        <div class="container-fluid px-4 px-lg-5">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6 order-2 order-lg-1 reveal-on-scroll slide-left">
-                    <div class="glass-panel p-5 rounded-5" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center;">
-                        <h2 class="display-5 fw-bold mb-4 text-white">¿Quiénes somos?</h2>
-                        <p class="fs-5 text-white-50 mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row w-100 m-0 justify-content-center">
+                <div class="col-lg-10 reveal-on-scroll slide-up">
+                    <div class="glass-panel p-5 rounded-5 text-center position-relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-primary-soft opacity-10" style="pointer-events: none;"></div>
+                        
+                        <h2 class="display-4 fw-bold mb-4 text-white">¿Quiénes somos?</h2>
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="bg-primary rounded-pill" style="width: 60px; height: 4px;"></div>
+                        </div>
+                        <p class="fs-4 text-white-50 mb-4 lh-lg">
                             Somos una plataforma innovadora que conecta a creadores de contenido con espectadores apasionados. 
-                            En WatchATon, creemos que tu tiempo vale oro. Por eso, hemos creado un ecosistema donde 
-                            cada minuto que pasas disfrutando de contenido de calidad se traduce en recompensas tangibles.
+                            En <span class="text-white fw-bold">WatchATon</span>, creemos que tu tiempo vale oro. Por eso, 
+                            <span class="text-white">hemos transformado la publicidad</span>: dejamos atrás la idea del anuncio como una barrera molesta y lo convertimos en un 
+                            <span class="text-warning fw-bold">beneficio tangible para ti</span>.
                         </p>
                         <p class="fs-5 text-white-50">
-                            Nuestra misión es democratizar el entretenimiento y ofrecer una experiencia justa y divertida para todos.
+                            Aquí, cada segundo que inviertes en ver contenido no es tiempo perdido, sino recompensas reales que van directo a tu bolsillo.
                         </p>
-                    </div>
-                </div>
-                <div class="col-lg-6 order-1 order-lg-2 reveal-on-scroll slide-right">
-                    <div class="img-placeholder rounded-5 d-flex align-items-center justify-content-center glass-panel" style="height: 400px; border: 2px dashed rgba(255,255,255,0.2);">
-                        <div class="text-center text-white-50">
-                            <i class="bi bi-people fs-1 mb-3 d-block"></i>
-                            <span>Imagen: Equipo / Comunidad</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -80,42 +79,54 @@ require_once '../includes/cabecera.php';
 
     <!-- Sección 2: Como empezar a ganar -->
     <section class="landing-section">
-        <div class="container-fluid px-4 px-lg-5">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6 reveal-on-scroll slide-left">
-                    <div class="img-placeholder rounded-5 d-flex align-items-center justify-content-center glass-panel" style="height: 400px; border: 2px dashed rgba(255,255,255,0.2);">
-                        <div class="text-center text-white-50">
-                            <i class="bi bi-coin fs-1 mb-3 d-block"></i>
-                            <span>Imagen: Ganando Puntos / Interfaz</span>
+        <div class="container px-4 px-lg-5">
+            <div class="text-center mb-5 reveal-on-scroll slide-up">
+                <h2 class="display-4 fw-bold text-white mb-3">¿Cómo empezar a ganar?</h2>
+                <p class="fs-5 text-white-50">Es tan fácil como contar hasta tres</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Paso 1 -->
+                <div class="col-md-6 col-lg-3 reveal-on-scroll slide-up" style="transition-delay: 100ms;">
+                    <div class="glass-panel p-4 h-100 rounded-5 text-center hover-scale">
+                        <div class="mb-4 d-inline-block p-3 rounded-circle bg-primary bg-opacity-25 border border-primary border-opacity-50">
+                            <i class="bi bi-person-plus-fill fs-2 text-white"></i>
                         </div>
+                        <h3 class="h5 text-white fw-bold mb-3">1. Regístrate Gratis</h3>
+                        <p class="text-white-50 small">Crea tu cuenta en segundos y únete a nuestra comunidad.</p>
                     </div>
                 </div>
-                <div class="col-lg-6 reveal-on-scroll slide-right">
-                    <div class="glass-panel p-5 rounded-5">
-                        <h2 class="display-5 fw-bold mb-4 text-white">¿Cómo empezar a ganar?</h2>
-                        <ul class="list-unstyled fs-5 text-white-50">
-                            <li class="mb-4 d-flex align-items-start">
-                                <i class="bi bi-1-circle-fill text-primary me-3 fs-3"></i>
-                                <div>
-                                    <strong class="text-white d-block mb-1">Regístrate Gratis</strong>
-                                    Crea tu cuenta en segundos y únete a nuestra comunidad.
-                                </div>
-                            </li>
-                            <li class="mb-4 d-flex align-items-start">
-                                <i class="bi bi-2-circle-fill text-primary me-3 fs-3"></i>
-                                <div>
-                                    <strong class="text-white d-block mb-1">Mira Anuncios</strong>
-                                    Mira tus videos favoritos y tomate un momento para ver el anuncio antes del video.
-                                </div>
-                            </li>
-                            <li class="d-flex align-items-start">
-                                <i class="bi bi-3-circle-fill text-primary me-3 fs-3"></i>
-                                <div>
-                                    <strong class="text-white d-block mb-1">Acumula Puntos</strong>
-                                    Cada anuncio visto completo suma puntos automáticamente a tu billetera virtual.
-                                </div>
-                            </li>
-                        </ul>
+
+                <!-- Paso 2 (Nuevo) -->
+                <div class="col-md-6 col-lg-3 reveal-on-scroll slide-up" style="transition-delay: 200ms;">
+                    <div class="glass-panel p-4 h-100 rounded-5 text-center hover-scale">
+                        <div class="mb-4 d-inline-block p-3 rounded-circle bg-info bg-opacity-25 border border-info border-opacity-50">
+                            <i class="bi bi-search fs-2 text-white"></i>
+                        </div>
+                        <h3 class="h5 text-white fw-bold mb-3">2. Explora</h3>
+                        <p class="text-white-50 small">Busca y descubre los videos que realmente te apasionan.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 3 (Modificado) -->
+                <div class="col-md-6 col-lg-3 reveal-on-scroll slide-up" style="transition-delay: 300ms;">
+                    <div class="glass-panel p-4 h-100 rounded-5 text-center hover-scale">
+                        <div class="mb-4 d-inline-block p-3 rounded-circle bg-warning bg-opacity-25 border border-warning border-opacity-50">
+                            <i class="bi bi-hourglass-split fs-2 text-white"></i>
+                        </div>
+                        <h3 class="h5 text-white fw-bold mb-3">3. Tómate un tiempo</h3>
+                        <p class="text-white-50 small">Mira un anuncio corto antes de tu video. Es solo un momento.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 4 -->
+                <div class="col-md-6 col-lg-3 reveal-on-scroll slide-up" style="transition-delay: 400ms;">
+                    <div class="glass-panel p-4 h-100 rounded-5 text-center hover-scale">
+                        <div class="mb-4 d-inline-block p-3 rounded-circle bg-success bg-opacity-25 border border-success border-opacity-50">
+                            <i class="bi bi-coin fs-2 text-white"></i>
+                        </div>
+                        <h3 class="h5 text-white fw-bold mb-3">4. Acumula Puntos</h3>
+                        <p class="text-white-50 small">Suma puntos automáticamente a tu billetera y canjéalos.</p>
                     </div>
                 </div>
             </div>
@@ -124,48 +135,45 @@ require_once '../includes/cabecera.php';
 
     <!-- Sección 3: Como canjear mis puntos -->
     <section class="landing-section mb-5">
-        <div class="container-fluid px-4 px-lg-5">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6 order-2 order-lg-1 reveal-on-scroll slide-left">
-                    <div class="glass-panel p-5 rounded-5">
-                        <h2 class="display-5 fw-bold mb-4 text-white">¿Cómo canjear mis puntos?</h2>
-                        <p class="fs-5 text-white-50 mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="glass-panel p-5 rounded-5 reveal-on-scroll slide-up">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="display-4 fw-bold mb-4 text-white">¿Cómo canjear mis puntos?</h2>
+                        <p class="fs-4 text-white-50 mb-5">
                             ¡Es la mejor parte! Una vez que hayas acumulado suficientes puntos, dirígete a nuestra tienda de recompensas.
                         </p>
-                        <div class="d-flex gap-4 mb-4">
-                            <div class="text-center">
-                                <div class="bg-white bg-opacity-10 rounded-circle p-3 mb-2 mx-auto" style="width: 60px; height: 60px;">
-                                    <i class="bi bi-gift fs-3 text-white"></i>
-                                </div>
-                                <span class="small text-white-50">Tarjetas de Regalo</span>
-                            </div>
-                            <div class="text-center">
-                                <div class="bg-white bg-opacity-10 rounded-circle p-3 mb-2 mx-auto" style="width: 60px; height: 60px;">
-                                    <i class="bi bi-cash-coin fs-3 text-white"></i>
-                                </div>
-                                <span class="small text-white-50">Dinero Real</span>
-                            </div>
-                            <div class="text-center">
-                                <div class="bg-white bg-opacity-10 rounded-circle p-3 mb-2 mx-auto" style="width: 60px; height: 60px;">
-                                    <i class="bi bi-stars fs-3 text-white"></i>
-                                </div>
-                                <span class="small text-white-50">Beneficios VIP</span>
-                            </div>
-                        </div>
                         
-                        <?php if(isset($_COOKIE['iniciado'])): ?>
-                            <a href="Canjear.php" class="btn btn-outline-light rounded-pill px-4">Ver Catálogo de Premios</a>
-                        <?php else: ?>
-                            <a href="IniciarSesion.php" class="btn btn-outline-light rounded-pill px-4">Iniciar Sesión para Ver Premios</a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <div class="col-lg-6 order-1 order-lg-2 reveal-on-scroll slide-right">
-                    <div class="img-placeholder rounded-5 d-flex align-items-center justify-content-center glass-panel" style="height: 400px; border: 2px dashed rgba(255,255,255,0.2);">
-                        <div class="text-center text-white-50">
-                            <i class="bi bi-bag-check fs-1 mb-3 d-block"></i>
-                            <span>Imagen: Tienda / Premios</span>
+                        <div class="row g-4 mb-5 justify-content-center">
+                            <div class="col-4 col-md-3">
+                                <div class="bg-white bg-opacity-10 rounded-circle p-3 mb-3 mx-auto shadow-sm" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-gift fs-1 text-white"></i>
+                                </div>
+                                <span class="d-block text-white fw-bold">Tarjetas Regalo</span>
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <div class="bg-white bg-opacity-10 rounded-circle p-3 mb-3 mx-auto shadow-sm" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-cash-coin fs-1 text-white"></i>
+                                </div>
+                                <span class="d-block text-white fw-bold">Dinero Real</span>
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <div class="bg-white bg-opacity-10 rounded-circle p-3 mb-3 mx-auto shadow-sm" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-stars fs-1 text-white"></i>
+                                </div>
+                                <span class="d-block text-white fw-bold">Beneficios VIP</span>
+                            </div>
                         </div>
+
+                        <?php if(isset($_COOKIE['iniciado'])): ?>
+                            <a href="Canjear.php" class="btn btn-light rounded-pill px-5 py-3 fw-bold fs-5 shadow hover-scale">
+                                <i class="bi bi-cart-check-fill me-2"></i>Ver Catálogo
+                            </a>
+                        <?php else: ?>
+                            <a href="IniciarSesion.php" class="btn btn-primary rounded-pill px-5 py-3 fw-bold fs-5 shadow hover-scale">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

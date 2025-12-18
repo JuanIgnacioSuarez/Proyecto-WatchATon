@@ -463,7 +463,15 @@ main {
 
 .reveal-on-scroll.active {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0) translateY(0);
+}
+
+.reveal-on-scroll.slide-up {
+  transform: translateY(50px);
+}
+
+.bg-gradient-primary-soft {
+  background: linear-gradient(to bottom, transparent, rgba(99, 102, 241, 0.2));
 }
 
 .hover-scale {
