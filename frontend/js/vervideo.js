@@ -18,7 +18,7 @@ let anuncioEstado = "desconocido";
 let anuncioPorcentaje = 0;
 
 // Variables temporizadores
-let segundos = 8;
+let segundos = 5;
 let timer;
 
 // Instancias Modales

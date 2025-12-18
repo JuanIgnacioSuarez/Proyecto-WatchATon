@@ -12,7 +12,7 @@
         $tituloPagina = '';
         
         switch($archivoActual) {
-            case 'landing.php': $tituloPagina = 'Inicio'; break;
+            case 'landing.php': $tituloPagina = 'Bienvenida'; break;
             case 'perfil.php': $tituloPagina = 'Mi Perfil'; break;
             case 'perfilPublico.php': $tituloPagina = 'Perfil Público'; break;
             case 'SubirVideo.php': $tituloPagina = 'Subir Video'; break;
@@ -22,7 +22,7 @@
             case 'IniciarSesion.php': $tituloPagina = 'Login'; break;
             case 'CrearCuenta.php': $tituloPagina = 'Registro'; break;
             case 'panel_admin.php': $tituloPagina = 'Admin'; break;
-            case 'index.php': $tituloPagina = 'Bienvenida'; break;
+            case 'index.php': $tituloPagina = 'Buscar videos'; break;
             case 'directrices.php': $tituloPagina = 'Directrices'; break;
         }
 

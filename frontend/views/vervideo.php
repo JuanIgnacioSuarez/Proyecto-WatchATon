@@ -41,7 +41,7 @@
         <!-- Overlay para el botón de saltar anuncio -->
         <div id="AdOverlay" class="position-absolute end-0 p-4" style="bottom: 80px; z-index: 20;">
             <button id="SaltarAnuncio" class="btn btn-gradient fw-bold text-white px-4 py-2 rounded-pill shadow-lg border-0" disabled>
-                Saltar anuncio en <span id="TiempoSaltar">8</span>
+                Saltar anuncio en <span id="TiempoSaltar">5</span>
             </button>
         </div>
       </div>
