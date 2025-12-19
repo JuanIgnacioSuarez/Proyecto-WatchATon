@@ -340,6 +340,20 @@ $(document).ready(function () {
   });
 
   $.post('../../backend/php/RecuperarAnuncio.php', {}, function (data) {
+
+    // VERIFICACIÓN PREMIUM PARA SALTAR ANUNCIO
+    const esPremium = getCookie('Premium') === 'true';
+    const saltarAnunciosPref = getCookie('SkipAds') === 'true';
+
+    if (esPremium && saltarAnunciosPref) {
+      console.log("Usuario Premium con 'Omitir Anuncios' activo. Saltando publicidad.");
+      // Simulamos estado "saltado" para bitácora si fuera necesario, o simplemente reproducimos
+      anuncioEstado = "saltado_premium";
+      reproducirVideoPrincipal();
+      return; // Salimos para no ejecutar reproductoranuncio.source()
+    }
+
+    // Comportamiento normal (Cargar anuncio)
     let anuncio = JSON.parse(data);
     idAnuncioActual = anuncio.ID_anuncio;
     reproductoranuncio.source(anuncio.public_id);
