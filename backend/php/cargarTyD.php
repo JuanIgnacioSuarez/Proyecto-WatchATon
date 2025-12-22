@@ -8,16 +8,20 @@ $conexion = new Conexion();
 $idUsuario = $conexion->existeDato('videos', 'ID_usuario', 'ID_video', $_POST['idVideo']);
 
 // Recuperar título y descripción del video
-$sql = "SELECT Titulo, Descripcion FROM videos WHERE ID_video = ?";
+// Recuperar título, descripción y estado de sanción del video
+$sql = "SELECT Titulo, Descripcion, sancionado FROM videos WHERE ID_video = ?";
 $tipos = "i";
 $parametros = [$_POST['idVideo']];
 $datosVideo = $conexion->consultar($sql, $tipos, $parametros);
 
 $titulo = "";
 $descripcion = "";
+$sancionado = 0;
+
 if (count($datosVideo) > 0) {
     $titulo = $datosVideo[0]['Titulo'];
     $descripcion = $datosVideo[0]['Descripcion'];
+    $sancionado = $datosVideo[0]['sancionado'];
 }
 
 // Recuperar datos del usuario que subió el video
@@ -42,6 +46,7 @@ if (count($datosUsuario) > 0) {
 
 //Ahora devolveremos lo que se mostrara en el html
 	echo '
+<input type="hidden" id="estadoSancionVideo" value="'.$sancionado.'">
 <div class="container mt-4">
   <div class="card shadow-sm border-0 rounded-4 glass-panel text-white">
     <div class="card-body p-4">

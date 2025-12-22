@@ -91,14 +91,28 @@ $(document).ready(function () {
 
   // Cargar Título y Descripción e Inyectar Botón Admin
   $('#TituloDescripcion').load('../../backend/php/cargarTyD.php', { idVideo: idVideo }, function () {
+    const isSanctioned = $('#estadoSancionVideo').val() == '1';
+
     if (esAdmin) {
-      $('#TituloDescripcion').append(`
+      let adminButtonHtml = '';
+
+      if (isSanctioned) {
+        adminButtonHtml = `
+              <div class="mt-3 border-top border-secondary pt-3">
+                  <button class="btn btn-outline-secondary btn-sm" disabled>
+                      <i class="bi bi-shield-x me-2"></i>Video Sancionado
+                  </button>
+              </div>`;
+      } else {
+        adminButtonHtml = `
               <div class="mt-3 border-top border-secondary pt-3">
                   <button id="btnSanctionVideo" class="btn btn-outline-danger btn-sm">
                       <i class="bi bi-shield-exclamation me-2"></i>Administrar / Sancionar Video
                   </button>
-              </div>
-          `);
+              </div>`;
+      }
+
+      $('#TituloDescripcion').append(adminButtonHtml);
 
       $('#btnSanctionVideo').off('click').on('click', function () {
         openSanctionModal(idVideo, 'video');
@@ -501,9 +515,7 @@ $(document).ready(function () {
     }
 
     // Construir URL de descarga usando transformaciones de Cloudinary
-    // Formato: https://res.cloudinary.com/<cloud_name>/video/upload/fl_attachment/<public_id>.mp4
-    const cloudName = 'dqrxdpqef'; // Mismo usado en config del player
-    // Limpiamos data por si trae espacios o saltos
+    const cloudName = 'dqrxdpqef';
     const publicId = currentVideoPublicId.trim();
 
     // Generar enlace temporal
@@ -512,20 +524,20 @@ $(document).ready(function () {
     // Forzar descarga
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.download = `video_${publicId}.mp4`; // Nombre sugerido
+    link.download = `video_${publicId}.mp4`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
-    downloadModalInstance.hide();
+    if (downloadModalInstance) downloadModalInstance.hide();
     showToast("Descarga iniciada 🚀", "success");
   });
-});
 
-window.showDownloadModal = function () {
-  if (downloadModalInstance) {
-    downloadModalInstance.show();
-  } else {
-    console.error("Modal de descarga no inicializado");
+  window.showDownloadModal = function () {
+    if (downloadModalInstance) {
+      downloadModalInstance.show();
+    } else {
+      console.error("Modal de descarga no inicializado");
+    }
   }
-}
+});

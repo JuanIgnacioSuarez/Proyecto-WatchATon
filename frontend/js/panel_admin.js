@@ -1090,9 +1090,8 @@ $(document).ready(function () {
             if (Array.isArray(data) && data.length > 0) {
                 data.forEach(r => {
                     // Link Perfil Usuario
-                    const userLink = r.public_id_perfil
-                        ? `<a href="../views/perfil_publico.php?id=${r.public_id_perfil}" target="_blank" class="text-white text-decoration-underline">${r.nombre_usuario}</a>`
-                        : `<span class="text-white">${r.nombre_usuario}</span>`;
+                    // Corrección: Apuntar a perfilPublico.php usando el ID de usuario (DB ID), no el public_id de imagen
+                    const userLink = `<a href="./perfilPublico.php?id=${r.id_usuario}" target="_blank" class="text-white text-decoration-underline">${r.nombre_usuario}</a>`;
 
                     // Tipo Sanción
                     const typeBadge = r.tipo_sancion == 1
@@ -1103,13 +1102,8 @@ $(document).ready(function () {
                     let objectLink = '<span class="text-muted">No disponible</span>';
 
                     if (r.tipo_objeto === 'video' && r.id_objeto) {
-                        // Si tenemos public_id del video (video_public_id en backend)
-                        // A veces el backend devuelve video_nombre, pero para link necesitamos ID o public_id?
-                        // vervideo.php usa ?id= (ID_video) o ?v= (public_id)? Usualmente ID database.
-                        // En admin_actions obtenemos ID_video como targetId.
-                        // En get_reclamos usamos JOIN videos v ON s.id_objeto = v.ID_video.
-                        // Entonces s.id_objeto es el ID valido video.
-                        objectLink = `<a href="../views/vervideo.php?id=${r.id_objeto}" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-play-circle me-1"></i>Ver Video</a>`;
+                        // Corrección: vervideo.php espera 'id_video' como parámetro, no 'id'
+                        objectLink = `<a href="./vervideo.php?id_video=${r.id_objeto}" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-play-circle me-1"></i>Ver Video</a>`;
                     } else if (r.tipo_objeto === 'comentario') {
                         objectLink = `<span class="text-info small"><i class="bi bi-chat-left-text me-1"></i>Comentario</span>`;
                     } else {
