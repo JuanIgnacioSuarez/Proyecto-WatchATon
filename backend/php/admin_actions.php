@@ -63,8 +63,8 @@ try {
             $conexion->actualizar("UPDATE videos SET sancionado = 1 WHERE ID_video = ?", "i", [$targetId]);
 
             // Registrar Sanción
-            $sqlSancion = "INSERT INTO sanciones (id_usuario, id_admin, motivo, descripcion, contenido_original, tipo) VALUES (?, ?, ?, ?, ?, ?)";
-            $conexion->insertar($sqlSancion, "iissss", [$idUsuarioDestino, $idAdmin, $reason, $description, $tituloVideo, $applySanction]);
+            $sqlSancion = "INSERT INTO sanciones (id_usuario, id_admin, motivo, descripcion, contenido_original, tipo, id_objeto, tipo_objeto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $conexion->insertar($sqlSancion, "iissssss", [$idUsuarioDestino, $idAdmin, $reason, $description, $tituloVideo, $applySanction, $targetId, 'video']);
 
             // Enviar Mensaje
             $tituloMensaje = "Video Eliminado: " . $tituloVideo;
@@ -95,8 +95,8 @@ try {
             $conexion->actualizar("UPDATE comentarios SET sancionado = 1 WHERE id_comentario = ?", "i", [$targetId]);
 
             // Registrar Sanción con el contenido del comentario
-            $sqlSancion = "INSERT INTO sanciones (id_usuario, id_admin, motivo, descripcion, contenido_original, tipo) VALUES (?, ?, ?, ?, ?, ?)";
-            $conexion->insertar($sqlSancion, "iissss", [$idUsuarioDestino, $idAdmin, $reason, $description, $contenidoComentario, $applySanction]);
+            $sqlSancion = "INSERT INTO sanciones (id_usuario, id_admin, motivo, descripcion, contenido_original, tipo, id_objeto, tipo_objeto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $conexion->insertar($sqlSancion, "iissssss", [$idUsuarioDestino, $idAdmin, $reason, $description, $contenidoComentario, $applySanction, $targetId, 'comentario']);
 
             // Enviar Mensaje
             $tituloMensaje = "Comentario Eliminado";

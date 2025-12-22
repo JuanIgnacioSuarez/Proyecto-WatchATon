@@ -57,6 +57,9 @@ require_once('../../backend/php/verificar_sesion_admin.php');
               <a href="#" class="nav-link-admin" data-section="admins">
                   <i class="bi bi-shield-lock me-3 fs-5"></i>Administradores
               </a>
+              <a href="#" class="nav-link-admin" data-section="reclamos">
+                  <i class="bi bi-flag me-3 fs-5"></i>Reclamos
+              </a>
           </nav>
 
           <div class="mt-auto border-top border-secondary border-opacity-25 pt-3">
@@ -523,6 +526,37 @@ require_once('../../backend/php/verificar_sesion_admin.php');
                               </table>
                           </div>
                       </div>
+
+                    </div>
+                </div>
+            </div>
+
+          <!-- Sección Reclamos -->
+          <div id="section-reclamos" class="section-content d-none">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h2 class="text-white fw-bold mb-0">Gestión de Reclamos</h2>
+              </div>
+              
+              <div class="glass-panel p-0 rounded-4 overflow-hidden mb-5">
+                  <div class="table-responsive">
+                      <table class="table table-dark table-hover mb-0 bg-transparent align-middle">
+                          <thead>
+                              <tr>
+                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Usuario</th>
+                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Sanción</th>
+                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Motivo</th>
+                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Fecha</th>
+                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Estado</th>
+                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25 text-end">Acciones</th>
+                              </tr>
+                          </thead>
+                          <tbody id="tabla-reclamos">
+                              <!-- Carga dinámica -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
                   </div>
               </div>
           </div>
@@ -851,6 +885,28 @@ require_once('../../backend/php/verificar_sesion_admin.php');
         <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center">
           <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-danger rounded-pill px-4" id="btn-confirm-delete-mensaje">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="resolveSanctionModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-panel text-white border-0">
+        <div class="modal-header border-bottom border-secondary border-opacity-25">
+          <h5 class="modal-title fw-bold">Confirmar Acción</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center py-4">
+            <div class="mb-3">
+                <i class="bi bi-question-circle text-info display-1" id="resolve-icon"></i>
+            </div>
+            <p class="fs-5" id="resolve-text">¿Estás seguro?</p>
+            <p class="text-white-50 small">Esta acción notificará al usuario.</p>
+        </div>
+        <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center">
+          <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary rounded-pill px-4" id="btn-confirm-resolve">Confirmar</button>
         </div>
       </div>
     </div>

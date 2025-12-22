@@ -25,6 +25,7 @@ $(document).ready(function () {
             loadBeneficioTypes();
         }
         if (section === 'mensajes') loadMensajesGlobales();
+        if (section === 'reclamos') loadReclamos();
     });
 
     // --- Inicialización ---
@@ -1073,4 +1074,138 @@ $(document).ready(function () {
         });
     });
 
+    // ==========================================
+    // RECLAMOS
+    // ==========================================
+    function loadReclamos() {
+        $.getJSON('../../backend/php/admin/gestionar_reclamos.php?accion=list', function (data) {
+            const $tbody = $('#tabla-reclamos');
+            $tbody.empty();
+
+            if (data.error) {
+                $tbody.html(`<tr><td colspan="6" class="text-center text-danger">${data.error}</td></tr>`);
+                return;
+            }
+
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(r => {
+                    // Link Perfil Usuario
+                    const userLink = r.public_id_perfil
+                        ? `<a href="../views/perfil_publico.php?id=${r.public_id_perfil}" target="_blank" class="text-white text-decoration-underline">${r.nombre_usuario}</a>`
+                        : `<span class="text-white">${r.nombre_usuario}</span>`;
+
+                    // Tipo Sanción
+                    const typeBadge = r.tipo_sancion == 1
+                        ? '<span class="badge bg-danger">Strike</span>'
+                        : '<span class="badge bg-warning text-dark">Advertencia</span>';
+
+                    // Link Objeto Sancionado
+                    let objectLink = '<span class="text-muted">No disponible</span>';
+
+                    if (r.tipo_objeto === 'video' && r.id_objeto) {
+                        // Si tenemos public_id del video (video_public_id en backend)
+                        // A veces el backend devuelve video_nombre, pero para link necesitamos ID o public_id?
+                        // vervideo.php usa ?id= (ID_video) o ?v= (public_id)? Usualmente ID database.
+                        // En admin_actions obtenemos ID_video como targetId.
+                        // En get_reclamos usamos JOIN videos v ON s.id_objeto = v.ID_video.
+                        // Entonces s.id_objeto es el ID valido video.
+                        objectLink = `<a href="../views/vervideo.php?id=${r.id_objeto}" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-play-circle me-1"></i>Ver Video</a>`;
+                    } else if (r.tipo_objeto === 'comentario') {
+                        objectLink = `<span class="text-info small"><i class="bi bi-chat-left-text me-1"></i>Comentario</span>`;
+                    } else {
+                        // Fallback para sanciones viejas sin id_objeto pero con contenido_original
+                        if (r.desc_sancion && r.desc_sancion.includes('video')) {
+                            objectLink = '<span class="text-white-50 small">Video (Legacy)</span>';
+                        }
+                    }
+
+                    // Estado
+                    let statusBadge = '';
+                    if (r.estado_reclamo === 'Pendiente') statusBadge = '<span class="badge bg-primary">Pendiente</span>';
+                    else if (r.estado_reclamo === 'Aceptado') statusBadge = '<span class="badge bg-success">Aceptado</span>';
+                    else if (r.estado_reclamo === 'Rechazado') statusBadge = '<span class="badge bg-secondary">Rechazado</span>';
+
+                    $tbody.append(`
+                        <tr>
+                            <td>${userLink}</td>
+                            <td>${typeBadge}</td>
+                            <td class="text-white-50 small" style="max-width: 200px;">
+                                <div class="text-truncate" title="${r.motivo}">${r.motivo}</div>
+                                <div class="text-truncate text-white-50" title="${r.desc_sancion}">${r.desc_sancion}</div>
+                            </td>
+                            <td class="text-white-50 small">${r.fecha_reclamo}</td>
+                            <td>${statusBadge}</td>
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    ${objectLink}
+                                    ${r.estado_reclamo === 'Pendiente' ? `
+                                        <button class="btn btn-sm btn-outline-success ms-2 btn-resolver-reclamo" data-id="${r.id_reclamo}" data-accion="aceptar" title="Aceptar Reclamo">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger btn-resolver-reclamo" data-id="${r.id_reclamo}" data-accion="rechazar" title="Rechazar Reclamo">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+            } else {
+                $tbody.html('<tr><td colspan="6" class="text-center text-white-50">No hay reclamos pendientes.</td></tr>');
+            }
+        });
+    }
+
+    // Event listener para resolver reclamos
+    // Event listener para resolver reclamos
+    let reclamoIdToResolve = null;
+    let accionToResolve = null;
+    let $btnToResolve = null;
+
+    $(document).on('click', '.btn-resolver-reclamo', function () {
+        reclamoIdToResolve = $(this).data('id');
+        accionToResolve = $(this).data('accion');
+        $btnToResolve = $(this);
+
+        const $modal = $('#resolveSanctionModal');
+        const $text = $('#resolve-text');
+        const $icon = $('#resolve-icon');
+        const $confirmBtn = $('#btn-confirm-resolve');
+
+        if (accionToResolve === 'aceptar') {
+            $text.text('¿Deseas ACEPTAR este reclamo y revocar la sanción?');
+            $icon.removeClass('text-danger text-info').addClass('text-success').attr('class', 'bi bi-check-circle text-success display-1');
+            $confirmBtn.removeClass('btn-danger btn-primary').addClass('btn-success').text('Aceptar Reclamo');
+        } else {
+            $text.text('¿Deseas RECHAZAR este reclamo y mantener la sanción?');
+            $icon.removeClass('text-success text-info').addClass('text-danger').attr('class', 'bi bi-x-circle text-danger display-1');
+            $confirmBtn.removeClass('btn-success btn-primary').addClass('btn-danger').text('Rechazar Reclamo');
+        }
+
+        $modal.modal('show');
+    });
+
+    $('#btn-confirm-resolve').click(function () {
+        if (!reclamoIdToResolve || !accionToResolve) return;
+
+        const $modal = $('#resolveSanctionModal');
+        const $originalContent = $btnToResolve.html();
+
+        $modal.modal('hide');
+        $btnToResolve.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+
+        $.post('../../backend/php/admin/resolver_reclamo.php', { id_reclamo: reclamoIdToResolve, accion: accionToResolve }, function (response) {
+            if (response.success) {
+                showToast(response.message, 'success');
+                loadReclamos(); // Recargar tabla
+            } else {
+                showToast(response.message || 'Error al procesar la solicitud', 'danger');
+                $btnToResolve.prop('disabled', false).html($originalContent);
+            }
+        }, 'json').fail(function () {
+            showToast('Error de conexión con el servidor', 'danger');
+            $btnToResolve.prop('disabled', false).html($originalContent);
+        });
+    });
 }); // Fin document ready
