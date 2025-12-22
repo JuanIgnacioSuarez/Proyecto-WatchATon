@@ -8,7 +8,7 @@ $(document).ready(function () {
         $('.nav-link-admin').removeClass('active');
         $(this).addClass('active');
 
-        // Update Navbar Subtitle
+        // Update Navbar subtitulo
         const sectionName = $(this).text().trim();
         $('#nav-sub-title').text(' > ' + sectionName);
 
@@ -1245,10 +1245,10 @@ $(document).ready(function () {
         });
     });
 
-    function loadReclamosV2(searchId = null) {
+    function loadReclamosV2(search = null) {
         let url = '../../backend/php/admin/gestionar_reclamos.php?accion=list';
-        if (searchId) {
-            url += `&search_id=${searchId}`;
+        if (search) {
+            url += `&search=${encodeURIComponent(search)}`;
         }
 
         $.getJSON(url, function (data) {
@@ -1316,5 +1316,15 @@ $(document).ready(function () {
             }
         });
     }
+
+    // Listeners para Búsqueda de Reclamos
+    // Botón de búsqueda eliminado por solicitud de UX - Se usa solo Enter.
+
+    $('#search-reclamos-input').keypress(function (e) {
+        if (e.which == 13) { // Enter key
+            const searchVal = $(this).val().trim();
+            loadReclamosV2(searchVal);
+        }
+    });
 
 }); // Fin document ready

@@ -28,7 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Sería complejo hacer join a comentarios y luego videos en una sola query si tipo_objeto varía.
         // Haremos la query principal y si es necesario resolveremos datos extra, o asumiendo que el User prioritario pidio "si es un video".
 
-        $search_id = isset($_GET['search_id']) ? intval($_GET['search_id']) : 0;
+        // Parametro de búsqueda (ID o Nombre)
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        // Retrocompatibilidad con search_id por si acaso (aunque cambiaremos JS)
+        if (empty($search) && isset($_GET['search_id'])) {
+            $search = $_GET['search_id'];
+        }
 
         $sql = "SELECT 
                     r.ID as id_reclamo,
@@ -54,10 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $params = [];
         $types = "";
 
-        if ($search_id > 0) {
-            $sql .= " WHERE u.ID = ?";
-            $params[] = $search_id;
-            $types .= "i";
+        // Lógica de filtrado inteligente
+        if (!empty($search)) {
+            // Si es un número puro, buscamos por ID exacto O también por nombre (por si el nombre son números)
+            if (ctype_digit($search)) {
+                 $sql .= " WHERE u.ID = ?";
+                 $params[] = intval($search);
+                 $types .= "i";
+            } else {
+                 // Si es texto, buscamos por nombre (LIKE)
+                 $sql .= " WHERE u.nombre_usuario LIKE ?";
+                 $params[] = "%" . $search . "%";
+                 $types .= "s";
+            }
         }
 
         $sql .= " ORDER BY r.Fecha DESC";

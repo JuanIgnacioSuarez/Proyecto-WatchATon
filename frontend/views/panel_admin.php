@@ -363,18 +363,14 @@ require_once('../../backend/php/verificar_sesion_admin.php');
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="text-white fw-bold mb-0">Gestión de Reclamos</h2>
                     <div class="d-flex gap-3 align-items-center">
-                        <div>
-                             <div class="input-group input-group-sm">
-                                <span class="input-group-text bg-dark border-secondary text-white-50"><i class="bi bi-person"></i></span>
-                                <input type="number" class="form-control bg-dark text-white border-secondary" id="search-user-id" placeholder="Filtrar por ID Usuario" style="max-width: 150px;">
-                                <button class="btn btn-outline-light" type="button" id="btn-search-reclamos"><i class="bi bi-search"></i></button>
-                             </div>
-                        </div>
-                        <select id="filter-fecha-reclamos" class="form-select form-select-sm rounded-pill bg-dark text-white border-secondary" style="max-width: 200px;">
-                            <option value="todos">Todos</option>
-                            <option value="pendiente">Pendientes</option>
-                        </select>
-                    </div>
+                         <div>
+                              <div class="input-group input-group-sm">
+                                 <span class="input-group-text bg-dark border-secondary text-white-50"><i class="bi bi-search"></i></span>
+                                 <input type="text" class="form-control bg-dark text-white border-secondary" id="search-reclamos-input" placeholder="Buscar Usuario (ID o Nombre)" style="max-width: 250px;">
+                              </div>
+                              <div class="form-text text-white-50 small mt-1">Deje vacío para ver todos. Puede buscar por nombre de usuario o ID.</div>
+                         </div>
+                     </div>
                 </div>
 
                 <div class="glass-panel p-0 rounded-4 overflow-hidden">
