@@ -103,7 +103,9 @@ function loadNotifications() {
 
         data.mensajes.forEach(m => {
             const isGlobal = m.id_destinatario == 0 || m.id_destinatario == null;
-            const isSanction = m.tipo === 'sancion';
+            const isSanction = m.tipo == 1;
+            const isApproved = m.tipo == 2;  // Reclamo Aprobado
+            const isRejected = m.tipo == 3;  // Reclamo Rechazado
             const isRead = m.leido == 1;
 
             let bgClass = 'bg-transparent';
@@ -121,6 +123,16 @@ function loadNotifications() {
                 borderClass = 'border-danger border-opacity-50';
                 icon = 'bi-exclamation-triangle-fill';
                 iconColor = 'text-danger';
+            } else if (isApproved) {
+                bgClass = 'bg-success bg-opacity-10';
+                borderClass = 'border-success border-opacity-50';
+                icon = 'bi-check-circle-fill';
+                iconColor = 'text-success';
+            } else if (isRejected) {
+                bgClass = 'bg-secondary bg-opacity-10';
+                borderClass = 'border-secondary border-opacity-50';
+                icon = 'bi-x-circle-fill';
+                iconColor = 'text-secondary';
             }
 
             // Botón de acción principal

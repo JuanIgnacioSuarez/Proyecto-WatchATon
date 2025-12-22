@@ -1,4 +1,8 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+header('Content-Type: application/json');
+
 session_start();
 require_once '../../classes/Conexion.php';
 
@@ -11,13 +15,15 @@ if (!isset($_COOKIE['iniciado'])) {
 
 $conexion = new Conexion();
 $email = $_COOKIE['iniciado'];
-$usuario = $conexion->consultar("SELECT Permisos FROM usuarios WHERE Correo = ?", "s", [$email]);
+$usuario = $conexion->consultar("SELECT ID, Permisos FROM usuarios WHERE Correo = ?", "s", [$email]);
 
 if (empty($usuario) || $usuario[0]['Permisos'] != 1) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Acceso denegado']);
     exit;
 }
+
+$idAdmin = (int)$usuario[0]['ID'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_reclamo = isset($_POST['id_reclamo']) ? intval($_POST['id_reclamo']) : 0;
@@ -58,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conexion->actualizar("UPDATE comentarios SET sancionado = 0 WHERE id_comentario = ?", "i", [$idObjeto]);
         }
 
-        // B. Eliminar Mensaje de Notificación (Intento heurístico)
+        // B. Eliminar Mensaje de Notificación
         $patronTitulo = "%" . $contenidoOriginal . "%";
-        $sqlBorrarMsj = "DELETE FROM mensajes WHERE id_destinatario = ? AND tipo = 'sancion' AND (titulo LIKE ? OR contenido LIKE ?)";
+        $sqlBorrarMsj = "DELETE FROM mensajes WHERE id_destinatario = ? AND tipo = 1 AND (titulo LIKE ? OR contenido LIKE ?)";
         $conexion->eliminar($sqlBorrarMsj, "iss", [$idUsuario, $patronTitulo, $patronTitulo]);
 
         // C. Eliminar Sanción
@@ -69,6 +75,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // D. Eliminar el Reclamo (Ya no tiene sentido que exista si la sanción no existe)
         $resultado = $conexion->eliminar("DELETE FROM Reclamos WHERE ID = ?", "i", [$id_reclamo]);
         
+        // E. Notificar al usuario (Tipo 2 = Aprobado)
+        $tituloMsg = "Reclamo Aceptado";
+        $contenidoMsg = "Tu reclamo ha sido revisado y aceptado. La sanción ha sido revocada y tu contenido restaurado. Lamentamos las molestias.";
+        try {
+            $conexion->insertar("INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, 2)", "iiss", [$idAdmin, (int)$idUsuario, $tituloMsg, $contenidoMsg]);
+        } catch (Exception $e) {
+            file_put_contents(__DIR__ . '/../../../debug/resolver_reclamo.log', date('Y-m-d H:i:s') . " ERROR INSERT tipo 2: " . $e->getMessage() . "\n", FILE_APPEND);
+        }
+
         $msgExito = 'Reclamo aceptado. Sanción revocada y contenido restaurado.';
 
     } else {
@@ -76,6 +91,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // La sanción se mantiene. El reclamo queda como historial y bloqueo.
         $resultado = $conexion->actualizar("UPDATE Reclamos SET Estado = 'Rechazado' WHERE ID = ?", "i", [$id_reclamo]);
         
+        // Notificar al usuario (Tipo 3 = Rechazado)
+        $tituloMsg = "Reclamo Rechazado";
+        $contenidoMsg = "Tu reclamo ha sido revisado y rechazado. La sanción se mantiene vigente tras la revisión administrativa.";
+        try {
+            $conexion->insertar("INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, 3)", "iiss", [$idAdmin, (int)$idUsuario, $tituloMsg, $contenidoMsg]);
+        } catch (Exception $e) {
+            file_put_contents(__DIR__ . '/../../../debug/resolver_reclamo.log', date('Y-m-d H:i:s') . " ERROR INSERT tipo 3: " . $e->getMessage() . "\n", FILE_APPEND);
+        }
+
         $msgExito = 'Reclamo rechazado. El estado ha sido actualizado.';
     }
     

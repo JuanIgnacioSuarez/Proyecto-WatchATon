@@ -14,7 +14,7 @@ switch ($accion) {
         $sql = "SELECT m.*, u.nombre_usuario as remitente_nombre 
                 FROM mensajes m 
                 LEFT JOIN usuarios u ON m.id_remitente = u.ID 
-                WHERE m.tipo = 'Global' 
+                WHERE m.tipo = 0 
                 ORDER BY m.fecha DESC";
         $res = $conexion->consultar($sql);
         echo json_encode($res);
@@ -30,7 +30,7 @@ switch ($accion) {
         }
 
         // Insertar mensaje global: id_destinatario = NULL (para no romper FK), id_remitente = admin
-        $sql = "INSERT INTO mensajes (titulo, contenido, tipo, id_destinatario, id_remitente, leido, fecha) VALUES (?, ?, 'Global', NULL, ?, 0, NOW())";
+        $sql = "INSERT INTO mensajes (titulo, contenido, tipo, id_destinatario, id_remitente, leido, fecha) VALUES (?, ?, 0, NULL, ?, 0, NOW())";
         
         $id = $conexion->insertar($sql, "ssi", [$titulo, $contenido, $idAdmin]);
         

@@ -74,7 +74,7 @@ try {
             }
             
             $sqlMensaje = "INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, ?)";
-            $conexion->insertar($sqlMensaje, "iisss", [$idAdmin, $idUsuarioDestino, $tituloMensaje, $contenidoMensaje, 'sancion']);
+            $conexion->insertar($sqlMensaje, "iissi", [$idAdmin, $idUsuarioDestino, $tituloMensaje, $contenidoMensaje, 1]);
 
             $response['success'] = true;
             $response['message'] = 'Video eliminado y sanción aplicada correctamente.';
@@ -106,7 +106,7 @@ try {
             }
 
             $sqlMensaje = "INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, ?)";
-            $conexion->insertar($sqlMensaje, "iisss", [$idAdmin, $idUsuarioDestino, $tituloMensaje, $contenidoMensaje, 'sancion']);
+            $conexion->insertar($sqlMensaje, "iissi", [$idAdmin, $idUsuarioDestino, $tituloMensaje, $contenidoMensaje, 1]);
 
             $response['success'] = true;
             $response['message'] = 'Comentario eliminado y sanción aplicada correctamente.';
