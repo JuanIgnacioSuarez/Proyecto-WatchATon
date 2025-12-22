@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $conexion->insertar("INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, 2)", "iiss", [$idAdmin, (int)$idUsuario, $tituloMsg, $contenidoMsg]);
         } catch (Exception $e) {
-            file_put_contents(__DIR__ . '/../../../debug/resolver_reclamo.log', date('Y-m-d H:i:s') . " ERROR INSERT tipo 2: " . $e->getMessage() . "\n", FILE_APPEND);
+            // Silenciar error de mensaje - no afecta la operación principal
         }
 
         $msgExito = 'Reclamo aceptado. Sanción revocada y contenido restaurado.';
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $conexion->insertar("INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, 3)", "iiss", [$idAdmin, (int)$idUsuario, $tituloMsg, $contenidoMsg]);
         } catch (Exception $e) {
-            file_put_contents(__DIR__ . '/../../../debug/resolver_reclamo.log', date('Y-m-d H:i:s') . " ERROR INSERT tipo 3: " . $e->getMessage() . "\n", FILE_APPEND);
+            // Silenciar error de mensaje - no afecta la operación principal
         }
 
         $msgExito = 'Reclamo rechazado. El estado ha sido actualizado.';

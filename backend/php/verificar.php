@@ -46,7 +46,7 @@ else{
 				
                 // LOGGING
                 $logMsg = date('Y-m-d H:i:s') . " - User: " . $_POST['email'] . " | ID: " . $idUsuario . " | Total Premium 0: " . print_r($resPremium, true) . "\n";
-                file_put_contents(__DIR__ . '/debug_login.log', $logMsg, FILE_APPEND);
+                file_put_contents(__DIR__ . '/../debug/debug_login.log', $logMsg, FILE_APPEND);
 
 				if (!empty($resPremium) && $resPremium[0]['total'] > 0) {
 					$es_premium = true;

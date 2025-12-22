@@ -96,7 +96,7 @@ $logMsg .= "Response: " . $respuesta . "\n";
 $logMsg .= "Curl Error: " . $curlError . "\n";
 $logMsg .= "Payload Sent: " . json_encode($datosPreferencia) . "\n";
 $logMsg .= "-----------------------------------\n";
-file_put_contents(__DIR__ . '/debug_mp.log', $logMsg, FILE_APPEND);
+file_put_contents(__DIR__ . '/../debug/debug_mp.log', $logMsg, FILE_APPEND);
 
 if ($httpCode === 201) {
     $data = json_decode($respuesta, true);
