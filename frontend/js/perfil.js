@@ -96,6 +96,7 @@ $(document).ready(function () {
     }
 
     // Cargar sanciones
+    // Cargar sanciones
     function loadSanctions() {
         $.getJSON('../../backend/php/cargarSanciones.php', function (data) {
             if (data.error) {
@@ -145,12 +146,56 @@ $(document).ready(function () {
                             ${originalContent}
                             <div class="text-end mt-2">
                                 <small class="text-white-50"><i class="bi bi-calendar3 me-1"></i>${s.fecha}</small>
+                                
+                                <div class="mt-2">
+                                    ${s.estado_reclamo
+                            ? `<span class="badge ${s.estado_reclamo === 'Pendiente' ? 'bg-warning text-dark' : 'bg-info'}">${s.estado_reclamo === 'Pendiente' ? 'Reclamo en Revisión' : 'Reclamo: ' + s.estado_reclamo}</span>`
+                            : `<button class="btn btn-outline-light btn-sm btn-reclamar" data-id="${s.id}">
+                                                 <i class="bi bi-flag me-1"></i>Reclamar
+                                               </button>`
+                        }
+                                </div>
                             </div>
                         </div>
                     `;
                 });
             }
             $('#lista-sanciones').html(html);
+
+            // Variables para el reclamo
+            let sanctionToClaimId = null;
+            const claimModal = new bootstrap.Modal(document.getElementById('claimSanctionModal'));
+
+            // Listener para botones de reclamar (delegado)
+            $('.btn-reclamar').on('click', function () {
+                sanctionToClaimId = $(this).data('id');
+                claimModal.show();
+            });
+
+            // Confirmar reclamo en el modal
+            $('#btn-confirm-claim').on('click', function () {
+                if (!sanctionToClaimId) return;
+
+                const $btnModal = $(this);
+                $btnModal.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Enviando...');
+
+                $.post('../../backend/php/crear_reclamo.php', { id_sancion: sanctionToClaimId }, function (response) {
+                    claimModal.hide();
+                    $btnModal.prop('disabled', false).text('Confirmar Reclamo');
+
+                    if (response.success) {
+                        showToast(response.message, 'success');
+                        loadSanctions(); // Recargar la lista para actualizar estado
+                    } else {
+                        showToast(response.message, 'error');
+                    }
+                }, 'json').fail(function () {
+                    claimModal.hide();
+                    $btnModal.prop('disabled', false).text('Confirmar Reclamo');
+                    showToast("Error de conexión.", 'error');
+                });
+            });
+
         }).fail(function () {
             $('#lista-sanciones').html('<div class="text-center text-danger">Error al cargar sanciones.</div>');
         });

@@ -406,6 +406,29 @@ require_once('../../backend/php/logica_perfil.php');
     </div>
   </div>
 
+  <!-- Modal de Reclamo (Confirmación) -->
+  <div class="modal fade" id="claimSanctionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-panel border-0 text-white">
+        <div class="modal-header border-bottom border-secondary border-opacity-25">
+          <h5 class="modal-title fw-bold">Confirmar Reclamo</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body py-4 text-center">
+            <div class="mb-3">
+                <i class="bi bi-question-circle text-primary display-1"></i>
+            </div>
+          <p class="fs-5">¿Estás seguro de que quieres solicitar una revisión para esta sanción?</p>
+          <p class="text-white-50 small">Un administrador revisará tu caso.</p>
+        </div>
+        <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center">
+          <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary rounded-pill px-4" id="btn-confirm-claim">Confirmar Reclamo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 2000;"></div>
 
   <?php include '../includes/footer.php';?>

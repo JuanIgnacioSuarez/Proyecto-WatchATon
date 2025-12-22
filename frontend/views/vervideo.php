@@ -52,6 +52,15 @@
           <!-- Se carga dinámicamente -->
         </div>
 
+        <!-- Botón de Descarga Premium -->
+        <?php if(isset($_COOKIE['Premium']) && $_COOKIE['Premium'] === 'true'): ?>
+            <div class="mt-3 pt-3 border-top border-secondary d-flex justify-content-end">
+                <button id="btnDescargarVideo" class="btn btn-success bg-gradient rounded-pill px-4 shadow-sm fw-bold border-0" onclick="showDownloadModal()" style="display: none;"> <!-- Oculto inicialmente hasta cargar video -->
+                    <i class="bi bi-cloud-arrow-down-fill me-2"></i>Descargar Video
+                </button>
+            </div>
+        <?php endif; ?>
+
       </div>
 
     </div>
@@ -180,7 +189,29 @@
 </div>
 
 
-<!-- Modal de Confirmación de Descarga (Movido al final para evitar problemas de Z-Index) -->
+<!-- Modal de Confirmación de Descarga -->
+<div class="modal fade" id="downloadModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content glass-panel border-0 text-white">
+      <div class="modal-body text-center p-5">
+        <div class="mb-4">
+            <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-block">
+                <i class="bi bi-cloud-arrow-down-fill display-4 text-success"></i>
+            </div>
+        </div>
+        <h4 class="fw-bold mb-2">¿Descargar Video?</h4>
+        <p class="text-white-50 mb-4">El video se guardará en tu dispositivo.</p>
+        
+        <div class="d-flex justify-content-center gap-3">
+            <button type="button" class="btn btn-outline-light px-4 rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" id="confirmDownload" class="btn btn-success px-4 rounded-pill fw-bold bg-gradient">
+                <i class="bi bi-download me-2"></i>Sí, Descargar
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script>

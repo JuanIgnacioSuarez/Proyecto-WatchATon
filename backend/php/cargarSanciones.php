@@ -12,9 +12,15 @@ $idUsuario = $conexion->existeDato('usuarios', 'ID', 'Correo', $email);
 
 if ($idUsuario) {
     // Obtener todas las sanciones
-    $sql = "SELECT motivo, descripcion, contenido_original, tipo, fecha FROM sanciones WHERE id_usuario = ? ORDER BY fecha DESC";
-    $tipos = "i";
-    $parametros = [$idUsuario];
+    // Obtener todas las sanciones
+    // Modificado para traer ID correcto y estado del reclamo
+    $sql = "SELECT s.id_sancion as id, s.motivo, s.descripcion, s.contenido_original, s.tipo, s.fecha, r.Estado as estado_reclamo 
+            FROM sanciones s 
+            LEFT JOIN Reclamos r ON s.id_sancion = r.ID_Sancion AND r.ID_Usuario = ?
+            WHERE s.id_usuario = ? 
+            ORDER BY s.fecha DESC";
+    $tipos = "ii";
+    $parametros = [$idUsuario, $idUsuario];
     $sanciones = $conexion->consultar($sql, $tipos, $parametros);
 
     // Contar sanciones activas (tipo 1)

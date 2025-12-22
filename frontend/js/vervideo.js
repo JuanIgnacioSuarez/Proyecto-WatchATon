@@ -474,6 +474,58 @@ window.reproducirVideoPrincipal = function () {
     }).fail(function (xhr, status, error) {
       console.error("Error al guardar bitácora:", error);
     });
+
+    // Configurar fuente del video principal
+    currentVideoPublicId = data; // Variable global para descarga
     reproductor.source(data);
+
+    // Mostrar botón de descarga si existe (Solo premium)
+    $('#btnDescargarVideo').fadeIn();
   });
+}
+
+// Variables globales adicionales
+let currentVideoPublicId = null;
+let downloadModalInstance;
+
+// Inicializar modal de descarga al cargar
+$(document).ready(function () {
+  if (document.getElementById('downloadModal')) {
+    downloadModalInstance = new bootstrap.Modal(document.getElementById('downloadModal'));
+  }
+
+  $('#confirmDownload').click(function () {
+    if (!currentVideoPublicId) {
+      showToast("Error: No se ha cargado el video aún.", "error");
+      return;
+    }
+
+    // Construir URL de descarga usando transformaciones de Cloudinary
+    // Formato: https://res.cloudinary.com/<cloud_name>/video/upload/fl_attachment/<public_id>.mp4
+    const cloudName = 'dqrxdpqef'; // Mismo usado en config del player
+    // Limpiamos data por si trae espacios o saltos
+    const publicId = currentVideoPublicId.trim();
+
+    // Generar enlace temporal
+    const downloadUrl = `https://res.cloudinary.com/${cloudName}/video/upload/fl_attachment/${publicId}.mp4`;
+
+    // Forzar descarga
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `video_${publicId}.mp4`; // Nombre sugerido
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    downloadModalInstance.hide();
+    showToast("Descarga iniciada 🚀", "success");
+  });
+});
+
+window.showDownloadModal = function () {
+  if (downloadModalInstance) {
+    downloadModalInstance.show();
+  } else {
+    console.error("Modal de descarga no inicializado");
+  }
 }
