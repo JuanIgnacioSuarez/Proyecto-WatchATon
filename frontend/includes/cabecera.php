@@ -79,7 +79,7 @@
                       <span class="visually-hidden">mensajes no leídos</span>
                   </span>
               </a>
-              <div class="dropdown-menu dropdown-menu-end glass-panel border-secondary border-opacity-25 p-0 mt-3" aria-labelledby="notificacionesDropdown" style="width: 350px; max-height: 500px; overflow-y: auto;">
+              <div class="dropdown-menu dropdown-menu-end glass-panel border-secondary border-opacity-25 p-0 mt-3" aria-labelledby="notificacionesDropdown" style="width: 350px; max-height: 500px; overflow-y: auto; z-index: 999999;">
                   <div class="p-3 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
                       <h6 class="mb-0 text-white fw-bold">Notificaciones</h6>
                       <small class="text-white-50" style="cursor: pointer;" onclick="markAllRead()">Marcar todo leído</small>
@@ -132,6 +132,26 @@
       <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center">
         <button id="cancel-logout" class="btn btn-outline-light rounded-pill px-4" onclick="closeLogoutModal()">Cancelar</button>
         <button id="confirm-logout" class="btn btn-danger rounded-pill px-4">Cerrar Sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="delete-notification-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content glass-panel border-0 text-white">
+      <div class="modal-header border-bottom border-secondary border-opacity-25">
+        <h5 class="modal-title fw-bold">Eliminar Notificación</h5>
+        <button type="button" class="btn-close btn-close-white" onclick="closeDeleteModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4 text-center">
+        <i class="bi bi-trash display-1 text-danger mb-3"></i>
+        <p class="fs-5">¿Estás seguro de que quieres eliminar esta notificación?</p>
+        <p class="text-white-50 small">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center">
+        <button id="cancel-delete-notif" class="btn btn-outline-light rounded-pill px-4" onclick="closeDeleteModal()">Cancelar</button>
+        <button id="confirm-delete-notif" class="btn btn-danger rounded-pill px-4">Eliminar</button>
       </div>
     </div>
   </div>

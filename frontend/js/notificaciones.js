@@ -1,15 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const checkJquery = setInterval(function () {
-        if (window.jQuery) {
-            clearInterval(checkJquery);
+    console.log("Notificaciones: DOMContentLoaded");
+    let retries = 0;
+    // Esperar a que Bootstrap esté cargado
+    const checkBootstrap = setInterval(function () {
+        retries++;
+        if (retries % 10 === 0) console.log("Notificaciones: Esperando Bootstrap...", window.bootstrap, window.jQuery);
+
+        if (window.bootstrap && window.jQuery) {
+            clearInterval(checkBootstrap);
+            console.log("Notificaciones: Bootstrap y jQuery detectados. Iniciando.");
             initNotifications(window.jQuery);
+        }
+        // Timeout de seguridad
+        if (retries > 100) {
+            clearInterval(checkBootstrap);
+            console.error("Notificaciones: Timeout esperando Bootstrap.");
         }
     }, 100);
 });
 
 function initNotifications($) {
     $(document).ready(function () {
-        console.log("Notificaciones: Iniciando...");
+        console.log("Notificaciones: Iniciando initNotifications...");
         // Re-inicializar dropdowns de bootstrap explícitamente si es necesario
         var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
         var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
@@ -27,10 +39,11 @@ function initNotifications($) {
 
             // Debug click y Toggle Manual
             $dropdownToggle.on('click', function (e) {
-                console.log("Click en campana detectado");
-                e.preventDefault();
-                e.stopPropagation();
-                dropdownInstance.toggle();
+                console.log("Notificaciones: Click en campana detectado");
+                // e.preventDefault(); 
+                // e.stopPropagation();
+                // dropdownInstance.toggle(); 
+                // Probamos DEJAR que bootstrap lo maneje primero, si tiene data-bs-toggle
             });
 
             loadNotifications();
@@ -57,6 +70,14 @@ function initNotifications($) {
                 // Dejar que el link funcione (href="perfil.php#sanciones")
                 // Pero necesitamos manejar el hash en perfil.js
             }
+        });
+
+        // Listener para eliminar notificación
+        $(document).on('click', '.btn-delete-notification', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = $(this).data('id');
+            deleteNotification(id, $(this));
         });
     });
 }
@@ -131,13 +152,21 @@ function loadNotifications() {
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <h6 class="mb-0 fw-bold ${isRead ? 'opacity-75' : ''}">${m.titulo}</h6>
                                     <small class="text-white-50 ms-2" style="font-size: 0.7rem;">${formatDate(m.fecha)}</small>
-                                    ${readBtn}
                                 </div>
                                 <p class="mb-1 small text-white-50 text-break" style="font-size: 0.85rem;">
                                     ${m.contenido.replace(/\n/g, '<br>')}
                                 </p>
                                 ${actionBtn}
                             </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column align-items-end justify-content-between ms-2">
+                             ${!isGlobal ? `
+                                <button class="btn btn-link text-white-50 p-0 mb-2 btn-delete-notification" data-id="${m.id_mensaje}" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                             ` : ''}
+                             ${readBtn}
                         </div>
                     </div>
                 </div>
@@ -146,6 +175,74 @@ function loadNotifications() {
         });
     });
 }
+
+// Handler para eliminar notificación
+// Variables para manejar el borrado modal
+let notifIdToDelete = null;
+let $btnNotifToDelete = null;
+
+// Handler para eliminar notificación (Abre Modal)
+function deleteNotification(id, $btn) {
+    notifIdToDelete = id;
+    $btnNotifToDelete = $btn;
+
+    // Abrir modal usando Bootstrap API
+    const modalEl = document.getElementById('delete-notification-modal');
+    if (modalEl) {
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    } else {
+        // Fallback
+        if (confirm('¿Seguro que quieres borrar?')) confirmDeleteNotification();
+    }
+}
+
+// Función real de borrado
+function confirmDeleteNotification() {
+    if (!notifIdToDelete) return;
+
+    // Cerrar modal
+    closeDeleteModal();
+
+    const id = notifIdToDelete;
+    const $btn = $btnNotifToDelete;
+
+    $.post('../../backend/php/eliminarMensaje.php', { id_mensaje: id }, function (response) {
+        if (response.success) {
+            const $item = $btn.closest('.list-group-item');
+            $item.fadeOut(300, function () {
+                $(this).remove();
+                if ($('#lista-notificaciones').children().length === 0) {
+                    $('#lista-notificaciones').html('<div class="text-center p-4 text-white-50"><i class="bi bi-inbox fs-1 mb-2"></i><p class="mb-0">No tienes mensajes.</p></div>');
+                }
+            });
+
+            const isRead = $item.find('h6').hasClass('opacity-75');
+            if (!isRead) {
+                let count = parseInt($('#notificaciones-badge').text());
+                if (count > 0) {
+                    count--;
+                    $('#notificaciones-badge').text(count);
+                    if (count === 0) $('#notificaciones-badge').addClass('d-none');
+                }
+            }
+        } else {
+            console.error(response.error);
+        }
+    }, 'json');
+}
+
+function closeDeleteModal() {
+    const modalEl = document.getElementById('delete-notification-modal');
+    if (modalEl) {
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+    }
+}
+
+$(document).on('click', '#confirm-delete-notif', function () {
+    confirmDeleteNotification();
+});
 
 function markAsRead(id, $btn) {
     $.post('../../backend/php/marcarMensajeLeido.php', { id_mensaje: id }, function (response) {
