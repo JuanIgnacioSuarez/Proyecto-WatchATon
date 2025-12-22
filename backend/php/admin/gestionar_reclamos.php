@@ -28,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Sería complejo hacer join a comentarios y luego videos en una sola query si tipo_objeto varía.
         // Haremos la query principal y si es necesario resolveremos datos extra, o asumiendo que el User prioritario pidio "si es un video".
 
+        $search_id = isset($_GET['search_id']) ? intval($_GET['search_id']) : 0;
+
         $sql = "SELECT 
                     r.ID as id_reclamo,
                     r.Fecha as fecha_reclamo,
@@ -41,15 +43,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     s.tipo as tipo_sancion,
                     s.id_objeto,
                     s.tipo_objeto,
+                    s.contenido_original,
                     v.public_id as video_public_id, -- SÓLO SI ES VIDEO
                     v.Titulo as video_titulo
                 FROM Reclamos r
                 JOIN sanciones s ON r.ID_Sancion = s.id_sancion
                 JOIN usuarios u ON r.ID_Usuario = u.ID
-                LEFT JOIN videos v ON (s.tipo_objeto = 'video' AND s.id_objeto = v.ID_video)
-                ORDER BY r.Fecha DESC";
+                LEFT JOIN videos v ON (s.tipo_objeto = 'video' AND s.id_objeto = v.ID_video)";
         
-        $reclamos = $conexion->consultar($sql);
+        $params = [];
+        $types = "";
+
+        if ($search_id > 0) {
+            $sql .= " WHERE u.ID = ?";
+            $params[] = $search_id;
+            $types .= "i";
+        }
+
+        $sql .= " ORDER BY r.Fecha DESC";
+        
+        $reclamos = $conexion->consultar($sql, $types, $params);
         echo json_encode($reclamos);
     }
 }

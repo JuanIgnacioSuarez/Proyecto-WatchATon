@@ -8,7 +8,7 @@ $(document).ready(function () {
         $('.nav-link-admin').removeClass('active');
         $(this).addClass('active');
 
-        // Update Navbar Sub-title
+        // Update Navbar Subtitle
         const sectionName = $(this).text().trim();
         $('#nav-sub-title').text(' > ' + sectionName);
 
@@ -25,7 +25,7 @@ $(document).ready(function () {
             loadBeneficioTypes();
         }
         if (section === 'mensajes') loadMensajesGlobales();
-        if (section === 'reclamos') loadReclamos();
+        if (section === 'reclamos') loadReclamosV2();
     });
 
     // --- Inicialización ---
@@ -1077,10 +1077,34 @@ $(document).ready(function () {
     // ==========================================
     // RECLAMOS
     // ==========================================
-    function loadReclamos() {
-        $.getJSON('../../backend/php/admin/gestionar_reclamos.php?accion=list', function (data) {
+    // ==========================================
+    // RECLAMOS
+    // ==========================================
+
+    // Evento de búsqueda
+    $('#btn-search-reclamos').click(function () {
+        const searchId = $('#search-user-id').val();
+        loadReclamos(searchId);
+    });
+
+    // Enter en el input de búsqueda
+    $('#search-user-id').keypress(function (e) {
+        if (e.which == 13) {
+            loadReclamos($(this).val());
+        }
+    });
+
+    function loadReclamos(searchId = null) {
+        let url = '../../backend/php/admin/gestionar_reclamos.php?accion=list';
+        if (searchId) {
+            url += `&search_id=${searchId}`;
+        }
+
+        $.getJSON(url, function (data) {
             const $tbody = $('#tabla-reclamos');
+            const $tbodyRechazados = $('#tabla-reclamos-rechazados');
             $tbody.empty();
+            $tbodyRechazados.empty();
 
             if (data.error) {
                 $tbody.html(`<tr><td colspan="6" class="text-center text-danger">${data.error}</td></tr>`);
@@ -1101,11 +1125,18 @@ $(document).ready(function () {
                     // Link Objeto Sancionado
                     let objectLink = '<span class="text-muted">No disponible</span>';
 
+                    // Botón para ver contenido original (comentario)
+                    let contentButton = '';
+
                     if (r.tipo_objeto === 'video' && r.id_objeto) {
                         // Corrección: vervideo.php espera 'id_video' como parámetro, no 'id'
                         objectLink = `<a href="./vervideo.php?id_video=${r.id_objeto}" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-play-circle me-1"></i>Ver Video</a>`;
                     } else if (r.tipo_objeto === 'comentario') {
                         objectLink = `<span class="text-info small"><i class="bi bi-chat-left-text me-1"></i>Comentario</span>`;
+                        // Si hay contenido original, mostramos botón para verlo
+                        if (r.contenido_original) {
+                            contentButton = `<button class="btn btn-sm btn-outline-light ms-1 view-content-btn" data-content="${encodeURIComponent(r.contenido_original)}" title="Ver Contenido"><i class="bi bi-eye"></i></button>`;
+                        }
                     } else {
                         // Fallback para sanciones viejas sin id_objeto pero con contenido_original
                         if (r.desc_sancion && r.desc_sancion.includes('video')) {
@@ -1132,6 +1163,7 @@ $(document).ready(function () {
                             <td class="text-end">
                                 <div class="btn-group">
                                     ${objectLink}
+                                    ${contentButton}
                                     ${r.estado_reclamo === 'Pendiente' ? `
                                         <button class="btn btn-sm btn-outline-success ms-2 btn-resolver-reclamo" data-id="${r.id_reclamo}" data-accion="aceptar" title="Aceptar Reclamo">
                                             <i class="bi bi-check-lg"></i>
@@ -1146,12 +1178,22 @@ $(document).ready(function () {
                     `);
                 });
             } else {
-                $tbody.html('<tr><td colspan="6" class="text-center text-white-50">No hay reclamos pendientes.</td></tr>');
+                $tbody.html('<tr><td colspan="6" class="text-center text-white-50">No hay reclamos que coincidan.</td></tr>');
             }
         });
     }
 
-    // Event listener para resolver reclamos
+    // Ver contenido original
+    $(document).on('click', '.view-content-btn', function () {
+        const content = decodeURIComponent($(this).data('content'));
+        $('#view-content-text').text(content);
+        const modal = new bootstrap.Modal(document.getElementById('viewContentModal'));
+        modal.show();
+    });
+
+    // Iniciar carga
+    loadReclamos();
+
     // Event listener para resolver reclamos
     let reclamoIdToResolve = null;
     let accionToResolve = null;
@@ -1192,7 +1234,7 @@ $(document).ready(function () {
         $.post('../../backend/php/admin/resolver_reclamo.php', { id_reclamo: reclamoIdToResolve, accion: accionToResolve }, function (response) {
             if (response.success) {
                 showToast(response.message, 'success');
-                loadReclamos(); // Recargar tabla
+                loadReclamosV2(); // Recargar tabla
             } else {
                 showToast(response.message || 'Error al procesar la solicitud', 'danger');
                 $btnToResolve.prop('disabled', false).html($originalContent);
@@ -1202,4 +1244,77 @@ $(document).ready(function () {
             $btnToResolve.prop('disabled', false).html($originalContent);
         });
     });
+
+    function loadReclamosV2(searchId = null) {
+        let url = '../../backend/php/admin/gestionar_reclamos.php?accion=list';
+        if (searchId) {
+            url += `&search_id=${searchId}`;
+        }
+
+        $.getJSON(url, function (data) {
+            const $tbody = $('#tabla-reclamos');
+            const $tbodyRechazados = $('#tabla-reclamos-rechazados');
+            $tbody.empty();
+            $tbodyRechazados.empty();
+
+            if (data.error) {
+                const errorRow = `<tr><td colspan="6" class="text-center text-danger">${data.error}</td></tr>`;
+                $tbody.html(errorRow);
+                $tbodyRechazados.html(errorRow);
+                return;
+            }
+
+            if (Array.isArray(data) && data.length > 0) {
+                let hasPending = false;
+                let hasRejected = false;
+
+                data.forEach(r => {
+                    const userLink = `<a href="./perfilPublico.php?id=${r.id_usuario}" target="_blank" class="text-white text-decoration-underline">${r.nombre_usuario}</a>`;
+                    const typeBadge = r.tipo_sancion == 1 ? '<span class="badge bg-danger">Strike</span>' : '<span class="badge bg-warning text-dark">Advertencia</span>';
+
+                    let objectLink = '<span class="text-muted">No disponible</span>';
+                    let contentButton = '';
+                    if (r.tipo_objeto === 'video' && r.id_objeto) {
+                        objectLink = `<a href="./vervideo.php?id_video=${r.id_objeto}" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-play-circle me-1"></i>Ver Video</a>`;
+                    } else if (r.tipo_objeto === 'comentario') {
+                        objectLink = `<span class="text-info small"><i class="bi bi-chat-left-text me-1"></i>Comentario</span>`;
+                        if (r.contenido_original) contentButton = `<button class="btn btn-sm btn-outline-light ms-1 view-content-btn" data-content="${encodeURIComponent(r.contenido_original)}" title="Ver Contenido"><i class="bi bi-eye"></i></button>`;
+                    } else {
+                        if (r.desc_sancion && r.desc_sancion.includes('video')) objectLink = '<span class="text-white-50 small">Video (Legacy)</span>';
+                    }
+
+                    let statusBadge = '';
+                    if (r.estado_reclamo === 'Pendiente') statusBadge = '<span class="badge bg-primary">Pendiente</span>';
+                    else if (r.estado_reclamo === 'Aceptado') statusBadge = '<span class="badge bg-success">Aceptado</span>';
+                    else if (r.estado_reclamo === 'Rechazado') statusBadge = '<span class="badge bg-secondary">Rechazado</span>';
+
+                    let actionButtons = '';
+                    if (r.estado_reclamo === 'Pendiente') {
+                        actionButtons = `
+                            <button class="btn btn-sm btn-outline-success ms-2 btn-resolver-reclamo" data-id="${r.id_reclamo}" data-accion="aceptar" title="Aceptar Reclamo">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger btn-resolver-reclamo" data-id="${r.id_reclamo}" data-accion="rechazar" title="Rechazar Reclamo">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        `;
+                    } else {
+                        actionButtons = '<span class="text-white-50 small">Sin acciones</span>';
+                    }
+
+                    const rowHtml = `<tr><td>${userLink}</td><td>${typeBadge}</td><td class="text-white-50 small" style="max-width: 200px;"><div class="text-truncate" title="${r.motivo}">${r.motivo}</div><div class="text-truncate text-white-50" title="${r.desc_sancion}">${r.desc_sancion}</div></td><td class="text-white-50 small">${r.fecha_reclamo}</td><td>${statusBadge}</td><td class="text-end"><div class="btn-group">${objectLink}${contentButton}${actionButtons}</div></td></tr>`;
+
+                    if (r.estado_reclamo === 'Pendiente') { $tbody.append(rowHtml); hasPending = true; }
+                    else if (r.estado_reclamo === 'Rechazado') { $tbodyRechazados.append(rowHtml); hasRejected = true; }
+                });
+
+                if (!hasPending) $tbody.html('<tr><td colspan="6" class="text-center text-white-50">No hay reclamos pendientes.</td></tr>');
+                if (!hasRejected) $tbodyRechazados.html('<tr><td colspan="6" class="text-center text-white-50">No hay reclamos rechazados.</td></tr>');
+            } else {
+                $tbody.html('<tr><td colspan="6" class="text-center text-white-50">No hay reclamos que coincidan.</td></tr>');
+                $tbodyRechazados.html('<tr><td colspan="6" class="text-center text-white-50">No hay reclamos que coincidan.</td></tr>');
+            }
+        });
+    }
+
 }); // Fin document ready

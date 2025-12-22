@@ -356,12 +356,69 @@ require_once('../../backend/php/verificar_sesion_admin.php');
 
               </div>
 
-
           </div>
 
+          <!-- Sección Reclamos -->
+          <div id="section-reclamos" class="section-content d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="text-white fw-bold mb-0">Gestión de Reclamos</h2>
+                    <div class="d-flex gap-3 align-items-center">
+                        <div>
+                             <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-dark border-secondary text-white-50"><i class="bi bi-person"></i></span>
+                                <input type="number" class="form-control bg-dark text-white border-secondary" id="search-user-id" placeholder="Filtrar por ID Usuario" style="max-width: 150px;">
+                                <button class="btn btn-outline-light" type="button" id="btn-search-reclamos"><i class="bi bi-search"></i></button>
+                             </div>
+                        </div>
+                        <select id="filter-fecha-reclamos" class="form-select form-select-sm rounded-pill bg-dark text-white border-secondary" style="max-width: 200px;">
+                            <option value="todos">Todos</option>
+                            <option value="pendiente">Pendientes</option>
+                        </select>
+                    </div>
+                </div>
 
+                <div class="glass-panel p-0 rounded-4 overflow-hidden">
+                    <div class="table-responsive">
+                       <table class="table table-dark table-hover mb-0 bg-transparent">
+                           <thead>
+                               <tr>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Usuario</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Tipo</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Motivo</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Fecha</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Estado</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25 text-end">Acciones</th>
+                               </tr>
+                           </thead>
+                           <tbody id="tabla-reclamos">
+                               <!-- Carga dinámica -->
+                           </tbody>
+                       </table>
+                    </div>
+                </div>
 
-          <!-- Sección Anuncios -->
+                <h5 class="text-white-50 fw-bold mt-4 mb-3 border-start border-4 border-danger ps-3">Reclamos Rechazados (Historial)</h5>
+                <div class="glass-panel p-0 rounded-4 overflow-hidden mb-4">
+                    <div class="table-responsive">
+                       <table class="table table-dark table-hover mb-0 bg-transparent">
+                           <thead>
+                               <tr>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Usuario</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Sanción</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Motivo</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Fecha</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Estado</th>
+                                   <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25 text-end">Acciones</th>
+                               </tr>
+                           </thead>
+                           <tbody id="tabla-reclamos-rechazados">
+                               <!-- Carga dinámica -->
+                           </tbody>
+                       </table>
+                    </div>
+                </div>
+          </div>
+
           <!-- Sección Anuncios -->
           <div id="section-anuncios" class="section-content d-none">
               <div class="d-flex justify-content-between align-items-center mb-4">
@@ -374,17 +431,11 @@ require_once('../../backend/php/verificar_sesion_admin.php');
                           <i class="bi bi-plus-lg me-2"></i>Nuevo Anuncio
                       </button>
                   </div>
-
-
               </div>
 
-
-              
               <div class="row g-4" id="grid-anuncios">
                   <!-- Carga dinámica de tarjetas de anuncios -->
               </div>
-
-
           </div>
 
 
@@ -531,35 +582,7 @@ require_once('../../backend/php/verificar_sesion_admin.php');
                 </div>
             </div>
 
-          <!-- Sección Reclamos -->
-          <div id="section-reclamos" class="section-content d-none">
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                  <h2 class="text-white fw-bold mb-0">Gestión de Reclamos</h2>
-              </div>
-              
-              <div class="glass-panel p-0 rounded-4 overflow-hidden mb-5">
-                  <div class="table-responsive">
-                      <table class="table table-dark table-hover mb-0 bg-transparent align-middle">
-                          <thead>
-                              <tr>
-                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Usuario</th>
-                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Sanción</th>
-                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Motivo</th>
-                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Fecha</th>
-                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25">Estado</th>
-                                  <th class="p-3 bg-transparent border-bottom border-secondary border-opacity-25 text-end">Acciones</th>
-                              </tr>
-                          </thead>
-                          <tbody id="tabla-reclamos">
-                              <!-- Carga dinámica -->
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-          </div>
-                  </div>
-              </div>
-          </div>
+
 
       </main>
   </div>
@@ -907,6 +930,26 @@ require_once('../../backend/php/verificar_sesion_admin.php');
         <div class="modal-footer border-top border-secondary border-opacity-25 justify-content-center">
           <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary rounded-pill px-4" id="btn-confirm-resolve">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para ver Contenido Original -->
+  <div class="modal fade" id="viewContentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content glass-panel border-0 text-white">
+        <div class="modal-header border-bottom border-secondary border-opacity-25">
+          <h5 class="modal-title fw-bold">Contenido Sancionado</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+            <div class="p-3 bg-dark bg-opacity-25 rounded border border-secondary border-opacity-25">
+                <p id="view-content-text" class="mb-0" style="white-space: pre-wrap; font-family: monospace;"></p>
+            </div>
+            <div class="mt-3 text-end">
+                <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+            </div>
         </div>
       </div>
     </div>

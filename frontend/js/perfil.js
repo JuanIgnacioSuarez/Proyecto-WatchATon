@@ -149,7 +149,7 @@ $(document).ready(function () {
                                 
                                 <div class="mt-2">
                                     ${s.estado_reclamo
-                            ? `<span class="badge ${s.estado_reclamo === 'Pendiente' ? 'bg-warning text-dark' : 'bg-info'}">${s.estado_reclamo === 'Pendiente' ? 'Reclamo en Revisión' : 'Reclamo: ' + s.estado_reclamo}</span>`
+                            ? `<span class="badge ${s.estado_reclamo === 'Pendiente' ? 'bg-warning text-dark' : (s.estado_reclamo === 'Rechazado' ? 'bg-danger' : 'bg-success')}">${s.estado_reclamo === 'Pendiente' ? 'Reclamo en Revisión' : 'Reclamo: ' + s.estado_reclamo}</span>`
                             : `<button class="btn btn-outline-light btn-sm btn-reclamar" data-id="${s.id}">
                                                  <i class="bi bi-flag me-1"></i>Reclamar
                                                </button>`

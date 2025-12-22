@@ -58,36 +58,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conexion->actualizar("UPDATE comentarios SET sancionado = 0 WHERE id_comentario = ?", "i", [$idObjeto]);
         }
 
-        // B. Eliminar Mensaje de Notificación
-        // Buscamos mensajes de tipo 'sancion' enviados al usuario. 
-        // Como no tenemos FK directa, usamos heurística: coincidencias de título o destinatario reciente.
-        // Simplificación: Borrar mensajes de tipo 'sancion' para este usuario que mencionen el contenido.
-        // Ojo: Esto podría borrar otros mensajes si el titulo es muy genérico, pero es lo mejor posible sin ID.
-        // Título usual: "Video Eliminado: [Titulo]" o "Comentario Eliminado"
+        // B. Eliminar Mensaje de Notificación (Intento heurístico)
         $patronTitulo = "%" . $contenidoOriginal . "%";
         $sqlBorrarMsj = "DELETE FROM mensajes WHERE id_destinatario = ? AND tipo = 'sancion' AND (titulo LIKE ? OR contenido LIKE ?)";
-        // Para comentarios, el titulo original no está en el titulo del mensaje ("Comentario Eliminado").
-        // Pero el contenido del mensaje tiene el comentario. "Tu comentario '...' ".
-        // Hacemos un intento de borrado.
         $conexion->eliminar($sqlBorrarMsj, "iss", [$idUsuario, $patronTitulo, $patronTitulo]);
 
         // C. Eliminar Sanción
         $conexion->eliminar("DELETE FROM sanciones WHERE id_sancion = ?", "i", [$idSancion]);
         
+        // D. Eliminar el Reclamo (Ya no tiene sentido que exista si la sanción no existe)
+        $resultado = $conexion->eliminar("DELETE FROM Reclamos WHERE ID = ?", "i", [$id_reclamo]);
+        
         $msgExito = 'Reclamo aceptado. Sanción revocada y contenido restaurado.';
 
     } else {
-        // --- CASO RECHAZAR: Solo borrar el reclamo ---
-        // La sanción se mantiene firme.
-        $msgExito = 'Reclamo rechazado y eliminado.';
+        // --- CASO RECHAZAR: Persistir Reclamo con estado Rechazado ---
+        // La sanción se mantiene. El reclamo queda como historial y bloqueo.
+        $resultado = $conexion->actualizar("UPDATE Reclamos SET Estado = 'Rechazado' WHERE ID = ?", "i", [$id_reclamo]);
+        
+        $msgExito = 'Reclamo rechazado. El estado ha sido actualizado.';
     }
-
-    // 2. Eliminar el Reclamo (Común para ambos casos, al final)
-    $resultado = $conexion->eliminar("DELETE FROM Reclamos WHERE ID = ?", "i", [$id_reclamo]);
     
     // Cerrar conexión auth
     if (isset($connection)) {
-         // La instancia $conexion no expone close() directamente si reusamos, pero Conexion::cerrarConexion() si.
          $conexion->cerrarConexion();
     }
 
