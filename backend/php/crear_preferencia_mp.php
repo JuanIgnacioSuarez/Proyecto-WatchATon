@@ -89,7 +89,7 @@ $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curlError = curl_error($ch);
 curl_close($ch);
 
-// DEBUG LOGGING
+// DEBUG 
 $logMsg = date('Y-m-d H:i:s') . "\n";
 $logMsg .= "HTTP Code: " . $httpCode . "\n";
 $logMsg .= "Response: " . $respuesta . "\n";

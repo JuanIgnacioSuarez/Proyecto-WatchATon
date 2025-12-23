@@ -12,7 +12,6 @@
 	<title>WAT Video</title>
 </head>
 <style>
-  /* Force modal z-index to be higher than everything else */
   .modal-backdrop {
     z-index: 10050 !important;
   }

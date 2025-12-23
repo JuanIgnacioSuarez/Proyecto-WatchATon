@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $conexion->insertar("INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, 2)", "iiss", [$idAdmin, (int)$idUsuario, $tituloMsg, $contenidoMsg]);
         } catch (Exception $e) {
-            // Silenciar error de mensaje - no afecta la operación principal
         }
 
         $msgExito = 'Reclamo aceptado. Sanción revocada y contenido restaurado.';
@@ -97,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $conexion->insertar("INSERT INTO mensajes (id_remitente, id_destinatario, titulo, contenido, tipo) VALUES (?, ?, ?, ?, 3)", "iiss", [$idAdmin, (int)$idUsuario, $tituloMsg, $contenidoMsg]);
         } catch (Exception $e) {
-            // Silenciar error de mensaje - no afecta la operación principal
         }
 
         $msgExito = 'Reclamo rechazado. El estado ha sido actualizado.';

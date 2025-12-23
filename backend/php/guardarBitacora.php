@@ -34,7 +34,7 @@ $parametros = [$id_usuario, $id_video, $id_anuncio, $navegador, $inicio, $fin, $
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 try {
-    // Debug logging
+    // Debug 
     $logEntry = date('Y-m-d H:i:s') . " - ID User: $id_usuario, ID Video: $id_video, ID Anuncio: $id_anuncio, Nav: $navegador, Inicio: $inicio, Fin: $fin" . PHP_EOL;
     file_put_contents(__DIR__ . '/../debug/debug_bitacora.txt', $logEntry, FILE_APPEND);
 

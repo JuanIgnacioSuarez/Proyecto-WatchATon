@@ -64,7 +64,7 @@ try {
             $enlace = trim($_POST['enlace'] ?? '');
             $dias_duracion = isset($_POST['dias_duracion']) && $_POST['dias_duracion'] !== '' ? $_POST['dias_duracion'] : null;
 
-            // Debug logging
+            // Debug
             file_put_contents(__DIR__ . '/../../debug/debug_beneficios.log', print_r($_POST, true), FILE_APPEND);
 
             $missing = [];

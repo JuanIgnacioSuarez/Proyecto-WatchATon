@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_sancion'])) {
     }
 
     // Insertar nuevo reclamo
-    // Insertar nuevo reclamo
     $sql = "INSERT INTO Reclamos (ID_Sancion, ID_Usuario) VALUES (?, ?)";
     $tipos = "ii";
     $parametros = [$idSancion, $idUsuario];
