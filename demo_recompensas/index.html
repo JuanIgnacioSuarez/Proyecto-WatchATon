@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canjear Recompensa | Partner Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .demo-banner {
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            color: #000;
+            padding: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .partner-header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+        }
+
+        .partner-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .partner-logo i {
+            color: #667eea;
+            margin-right: 0.5rem;
+        }
+
+        .reward-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .reward-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .code-display {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .code-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #feca57;
+            letter-spacing: 3px;
+        }
+
+        .btn-copy {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .powered-by {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .powered-by span {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
+        .powered-by a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-demo {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        PÁGINA DE DEMOSTRACIÓN - Simulación de sitio externo de partner
+    </div>
+
+    <!-- Partner Header -->
+    <header class="partner-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="partner-logo">
+                    <i class="bi bi-gift"></i>
+                    Partner Rewards Demo
+                </div>
+                <span class="text-white-50 small">Empresa Ficticia S.A.</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container py-5">
+        <div class="text-center mb-4">
+            <h1 class="text-white mb-2">¡Recompensa Canjeada!</h1>
+            <p class="text-white-50">Tu código de descuento está listo para usar</p>
+        </div>
+
+        <div class="reward-card">
+            <div class="reward-icon">
+                <i class="bi bi-ticket-perforated"></i>
+            </div>
+
+            <h3 class="text-white text-center mb-3">Cupón de Descuento</h3>
+            <p class="text-white-50 text-center">Válido para tu próxima compra en nuestra tienda ficticia</p>
+
+            <div class="code-display">
+                <div class="code-label">TU CÓDIGO DE DESCUENTO</div>
+                <div class="code-value" id="rewardCode"></div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-copy" onclick="copyCode()">
+                    <i class="bi bi-clipboard me-2"></i>Copiar Código
+                </button>
+            </div>
+
+            <div class="info-box">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-info-circle text-info me-2 mt-1"></i>
+                    <div>
+                        <small class="text-white">
+                            <strong>¿Cómo usar?</strong><br>
+                            Ingresa este código en el checkout de cualquier tienda partner ficticia para obtener tu
+                            descuento.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="powered-by">
+                <span>Recompensa obtenida a través de </span>
+                <a href="../frontend/views/index.php">WatchATon</a>
+            </div>
+        </div>
+
+        <!-- Demo Explanation -->
+        <div class="text-center mt-5 text-white-50">
+            <i class="bi bi-lightbulb me-2"></i>
+            <small>
+                Esta página simula cómo funcionaría una página externa de partner donde los usuarios
+                canjean sus recompensas de WatchATon. En producción, cada partner tendría su propia página según sus
+                necesidades.
+            </small>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-demo">
+        <i class="bi bi-code-slash me-1"></i>
+        Página de demostración para proyecto académico - No es un sitio real
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Generar código aleatorio
+        function generateCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 12; i++) {
+                if (i > 0 && i % 4 === 0) code += '-';
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        // Mostrar código al cargar
+        document.getElementById('rewardCode').textContent = generateCode();
+
+        // Copiar al portapapeles
+        function copyCode() {
+            const code = document.getElementById('rewardCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.btn-copy');
+                btn.innerHTML = '<i class="bi bi-check2 me-2"></i>¡Copiado!';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="bi bi-clipboard me-2"></i>Copiar Código';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
