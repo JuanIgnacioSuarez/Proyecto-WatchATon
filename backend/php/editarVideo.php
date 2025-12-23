@@ -57,12 +57,8 @@ if ($idUsuario) {
 
         // Si hay una nueva portada y es diferente a la anterior, borrar la vieja
         if ($newPublicIdPortada !== $oldPublicId && !empty($oldPublicId)) {
-             // Configurar Cloudinary (Idealmente esto debería estar en una clase o config separada)
-             require_once '../../vendor/autoload.php'; // Asegúrate de tener el autoload si usas composer, o incluir la librería manual
-             // Como no tenemos composer visible, usaremos la API REST o la librería si está disponible.
-             // Asumiremos que tenemos la librería manual o usaremos un script auxiliar como EliminarImagen.php
+             require_once '../../vendor/autoload.php';             
              
-             // Opción rápida: Usar la misma lógica que EliminarImagen.php pero interna
              $cloud_name = "dqrxdpqef";
              $api_key = "663633514336335";
              $api_secret = "QM_D1b-7s9Yy8Jj55p7qQ4Jg56o";

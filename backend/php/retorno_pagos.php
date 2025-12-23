@@ -6,10 +6,6 @@ require_once __DIR__ . '/procesar_post_pago.php'; // Incluye Conexion.php
 
 // Verificar sesión (Opcional: Si MP redirige, el navegador debería enviar la cookie)
 if (!isset($_COOKIE['iniciado'])) {
-    // Si no hay sesión, igual podríamos procesarlo si confiamos en el payment_id,
-    // pero idealmente necesitamos saber quién es usuario.
-    // MP envía 'external_reference' que pusimos como ID de usuario.
-    // Aún así, validemos cookie por seguridad básica.
     header("Location: ../../frontend/views/index.php");
     exit;
 }

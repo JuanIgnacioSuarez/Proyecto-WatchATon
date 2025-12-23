@@ -55,7 +55,7 @@ require_once '../includes/cabecera.php';
             <div class="row w-100 m-0 justify-content-center">
                 <div class="col-lg-10 reveal-on-scroll slide-up">
                     <div class="glass-panel p-5 rounded-5 text-center position-relative overflow-hidden">
-                        <!-- Decorative bg -->
+                        
                         <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-primary-soft opacity-10" style="pointer-events: none;"></div>
                         
                         <h2 class="display-4 fw-bold mb-4 text-white">¿Quiénes somos?</h2>

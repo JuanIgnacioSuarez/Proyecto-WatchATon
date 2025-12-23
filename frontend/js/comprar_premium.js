@@ -1,7 +1,7 @@
 // frontend/js/comprar_premium.js
 document.addEventListener("DOMContentLoaded", function () {
     // Configurar Mercado Pago
-    // IMPORTANTE: PUBLIC KEY FRONTEND -> APP_USR-44cd806e-504a-4aa7-a189-3cfb8ec45eab
+    // IMPORTANTE: PUBLIC KEY -> APP_USR-44cd806e-504a-4aa7-a189-3cfb8ec45eab
     const mp = new MercadoPago('APP_USR-44cd806e-504a-4aa7-a189-3cfb8ec45eab', {
         locale: 'es-AR'
     });

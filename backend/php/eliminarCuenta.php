@@ -46,14 +46,12 @@ try {
             try {
                 $cloudinary->uploadApi()->destroy($video['public_id'], ['resource_type' => 'video']);
             } catch (Exception $e) {
-                // Ignorar error individual para seguir borrando
             }
         }
         if (!empty($video['public_id_portada'])) {
             try {
                 $cloudinary->uploadApi()->destroy($video['public_id_portada'], ['resource_type' => 'image']);
             } catch (Exception $e) {
-                // Ignorar error individual
             }
         }
     }
@@ -66,11 +64,10 @@ try {
         try {
             $cloudinary->uploadApi()->destroy($resProfile[0]['public_id_perfil'], ['resource_type' => 'image']);
         } catch (Exception $e) {
-            // Ignorar error
         }
     }
 
-    // 4. Borrar usuario de la BD (Debería borrar videos en cascada si está configurado, pero lo hacemos explícito)
+    // 4. Borrar usuario de la BD
     // Borrar videos primero
     $conexion->eliminar("DELETE FROM videos WHERE ID_usuario = ?", "i", [$idUsuario]);
     
@@ -81,7 +78,7 @@ try {
         $response['success'] = true;
         $response['message'] = 'Cuenta eliminada correctamente.';
     } else {
-        throw new Exception("Error al eliminar usuario de la base de datos.");
+        throw new Exception("Error al eliminar usuario.");
     }
 
 } catch (Exception $e) {

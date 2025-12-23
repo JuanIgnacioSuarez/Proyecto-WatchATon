@@ -60,7 +60,7 @@
         <button id="SubirVideo" class="btn btn-outline-light w-100" type="button"><i class="bi bi-camera-video me-2"></i>Seleccionar Video</button>
       </div>
       <div id="videoPreviewContainer" style="width: 100%; max-width: 640px; height: 360px; margin: 0 auto; display: none;" class="rounded shadow-sm mb-3 overflow-hidden border border-secondary">
-        <!-- El elemento video será generado dinámicamente por JavaScript -->
+        <!-- El elemento video será generado dinámicamente por javascript -->
       </div>
       <button id="borrarVideoCargado" class="btn btn-danger btn-sm mt-2" style="display: none;">Borrar video cargado <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="spinnerVideo" style="display: none;"></span></button>
     </div>

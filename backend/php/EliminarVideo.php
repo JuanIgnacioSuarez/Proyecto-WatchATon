@@ -16,7 +16,7 @@ if (!isset($_POST["ID"]) || empty($_POST["ID"])) {
 $ID = $_POST["ID"];
 
 try {
-    // Configuración de Cloudinary directamente en el constructor
+    // Configuración de Cloudinary 
     $cloudinary = new Cloudinary([
         'cloud' => [
             'cloud_name' => 'dqrxdpqef',

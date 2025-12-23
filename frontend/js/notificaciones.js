@@ -40,10 +40,6 @@ function initNotifications($) {
             // Debug click y Toggle Manual
             $dropdownToggle.on('click', function (e) {
                 console.log("Notificaciones: Click en campana detectado");
-                // e.preventDefault(); 
-                // e.stopPropagation();
-                // dropdownInstance.toggle(); 
-                // Probamos DEJAR que bootstrap lo maneje primero, si tiene data-bs-toggle
             });
 
             loadNotifications();
@@ -292,8 +288,7 @@ function formatDate(dateString) {
     return date.toLocaleDateString();
 }
 
-// Función global para marcar todo (opcional, por ahora marca visualmente o recarga)
+// Función global para marcar todo
 function markAllRead() {
-    // Implementar backend si se desea, por ahora solo recarga para forzar sync
     loadNotifications();
 }

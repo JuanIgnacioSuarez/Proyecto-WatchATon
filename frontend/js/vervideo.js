@@ -76,7 +76,6 @@ $(document).ready(function () {
   const params = new URLSearchParams(window.location.search);
   idVideo = params.get("id_video");
   idVideo = params.get("id_video");
-  // const esAdmin = getCookie('es_admin') === 'true'; // Eliminado para usar la variable global inyectada
 
   // Inicializar Modales Bootstrap
   if (document.getElementById('deleteCommentModal')) {
@@ -121,7 +120,7 @@ $(document).ready(function () {
   });
 
   // Funciones de Modales (Definidas en scope pero accesibles)
-  window.showDeleteCommentModal = function (commentId) { // Expose to window if needed or keep local usage via delegation
+  window.showDeleteCommentModal = function (commentId) {
     if (!deleteModalInstance) { console.error("Error: deleteModalInstance no inicializado"); return; }
     currentCommentIdToDelete = commentId;
     deleteModalInstance.show();
@@ -161,7 +160,7 @@ $(document).ready(function () {
     sanctionModalInstance.show();
   };
 
-  // Event Delegation para Comentarios
+
   const $commentsContainer = $('#Comentarios');
 
   loadComments();
@@ -412,7 +411,7 @@ $(document).ready(function () {
   });
 
   $('#crearComentario').click(function () {
-    let comentario = $('#nuevoComentario').val().trim(); // Added .trim() here
+    let comentario = $('#nuevoComentario').val().trim();
     $.post('../../backend/php/nuevoComentario.php', { comentario: comentario, idVideo: idVideo }, function (data) {
       data = data ? data.trim() : ''; // Limpiar espacios en blanco
       switch (data) {
@@ -431,9 +430,9 @@ $(document).ready(function () {
     });
   });
 
-}); // End $(document).ready
+});
 
-// Funciones globales necesarias fuera del ready (si las hubiera, pero las moví la mayoría adentro o las expuse con window)
+// Funciones globales necesarias fuera del ready 
 
 window.ExitoCaptcha = function (token) {
   $.post('../../backend/php/verificarCaptcha.php', { token: token }, function (data) {

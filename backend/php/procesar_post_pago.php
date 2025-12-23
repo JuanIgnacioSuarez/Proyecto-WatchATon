@@ -30,7 +30,6 @@ function procesarPagoConfirmado($paymentData) {
     if ($estado === 'approved' || $estado === 'completed') {
         // Otorgar Premium (Canje)
         // El ID_beneficio 0 es PREMIUM
-        // Obtener duracion de metadata (si existe) o default 30
         $durationDays = isset($paymentData['metadata']['duration_days']) ? (int)$paymentData['metadata']['duration_days'] : 30;
         
         $fechaVencimiento = date('Y-m-d H:i:s', strtotime("+$durationDays days"));

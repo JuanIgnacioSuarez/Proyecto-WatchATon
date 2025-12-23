@@ -518,7 +518,7 @@ $(document).ready(function () {
         }, 'json').fail((jqXHR, textStatus, errorThrown) => {
             $('#btn-refresh-stats i').removeClass('spin-anim');
             console.error("Error loading stats:", textStatus, errorThrown);
-            // Detect AdBlocker (status 0 or error)
+            // Detectar AdBlocker (status 0 o error)
             if (jqXHR.status === 0 || textStatus === 'error') {
                 showToast('Error de conexión. Si usas AdBlock, desactívalo.', 'danger');
             } else {
@@ -656,7 +656,7 @@ $(document).ready(function () {
                 labels: data.map(d => d.nombre),
                 datasets: [{
                     data: data.map(d => d.vistas),
-                    backgroundColor: 'rgba(255, 193, 7, 0.7)', // Warning color
+                    backgroundColor: 'rgba(255, 193, 7, 0.7)', // Color de alerta
                     borderRadius: 4
                 }]
             },
@@ -1022,8 +1022,7 @@ $(document).ready(function () {
             $btn.prop('disabled', false).text('Actualizar');
             if (res.success) {
                 showToast('Mensaje actualizado correctamente', 'success');
-                $('#editMensajeModal').modal('hide'); // jQuery helper por si bootstrap instance no es accesible
-                // Cerrar modal bootstrap nativo si es necesario
+                $('#editMensajeModal').modal('hide');
                 const modalEl = document.getElementById('editMensajeModal');
                 const modalInstance = bootstrap.Modal.getInstance(modalEl);
                 if (modalInstance) modalInstance.hide();
@@ -1114,7 +1113,6 @@ $(document).ready(function () {
             if (Array.isArray(data) && data.length > 0) {
                 data.forEach(r => {
                     // Link Perfil Usuario
-                    // Corrección: Apuntar a perfilPublico.php usando el ID de usuario (DB ID), no el public_id de imagen
                     const userLink = `<a href="./perfilPublico.php?id=${r.id_usuario}" target="_blank" class="text-white text-decoration-underline">${r.nombre_usuario}</a>`;
 
                     // Tipo Sanción
@@ -1129,7 +1127,6 @@ $(document).ready(function () {
                     let contentButton = '';
 
                     if (r.tipo_objeto === 'video' && r.id_objeto) {
-                        // Corrección: vervideo.php espera 'id_video' como parámetro, no 'id'
                         objectLink = `<a href="./vervideo.php?id_video=${r.id_objeto}" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-play-circle me-1"></i>Ver Video</a>`;
                     } else if (r.tipo_objeto === 'comentario') {
                         objectLink = `<span class="text-info small"><i class="bi bi-chat-left-text me-1"></i>Comentario</span>`;
@@ -1318,13 +1315,12 @@ $(document).ready(function () {
     }
 
     // Listeners para Búsqueda de Reclamos
-    // Botón de búsqueda eliminado por solicitud de UX - Se usa solo Enter.
 
     $('#search-reclamos-input').keypress(function (e) {
-        if (e.which == 13) { // Enter key
+        if (e.which == 13) { // Enter
             const searchVal = $(this).val().trim();
             loadReclamosV2(searchVal);
         }
     });
 
-}); // Fin document ready
+}); 

@@ -1,8 +1,3 @@
-/**
- * premium_ui.js
- * Maneja la lógica visual para usuarios premium
- * V5.0 - Premium Logo Badge (Gold & Sparkles)
- */
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Premium UI: Checking status...");
@@ -16,7 +11,7 @@ function checkPremium() {
     if (isPremium) {
         injectPremiumStyles();
         addPremiumBadgeToLogo();
-        injectSkipAdsToggle(); // Nueva función para el botón
+        injectSkipAdsToggle();
     }
 }
 

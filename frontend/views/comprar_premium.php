@@ -24,7 +24,7 @@ $email = $_COOKIE['iniciado'];
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/misestilos.css">
     
-    <!-- SDK Mercado Pago V2 -->
+
     <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 <body class="bg-dark text-white">
@@ -125,7 +125,7 @@ $email = $_COOKIE['iniciado'];
                     </div>
                 </div>
 
-                <!-- Botón de Debug para Simular Pago (Solo Desarrollo) -->
+                <!-- Botón de Debug para Simular Pago (Solo prototipo) -->
             <div class="mt-4 pt-4 border-top border-secondary border-opacity-25 text-center">
                 <p class="text-white-50 small mb-2"><i class="bi bi-bug me-1"></i>Modo Desarrollo</p>
                 <div class="alert alert-info bg-opacity-10 border-info border-opacity-25 text-white small">

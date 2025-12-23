@@ -96,7 +96,6 @@ $(document).ready(function () {
     }
 
     // Cargar sanciones
-    // Cargar sanciones
     function loadSanctions() {
         $.getJSON('../../backend/php/cargarSanciones.php', function (data) {
             if (data.error) {
@@ -279,7 +278,7 @@ $(document).ready(function () {
                 $body.text('Esta acción eliminará permanentemente el video y todos sus datos asociados de nuestros servidores. No hay forma de recuperar esta información. ¿Deseas continuar?');
                 break;
             case 3:
-                $icon.addClass('bi-emoji-dizzy text-danger'); // Icono más "dramático"
+                $icon.addClass('bi-emoji-dizzy text-danger');
                 $title.text('¡Última Oportunidad!');
                 $body.html('¿Estás <strong>100% seguro</strong>? Si confirmas, este video desaparecerá más rápido que tu sueldo a fin de mes. 💸<br><br>¿Confirmar la aniquilación total del video?');
                 $btn.text('Sí, eliminarlo');
@@ -320,13 +319,13 @@ $(document).ready(function () {
     var myWidgetEditPortada = cloudinary.createUploadWidget({
         cloudName: 'dqrxdpqef',
         uploadPreset: 'mi_preset',
-        folder: 'portadas_de_videos', // Carpeta específica
+        folder: 'portadas_de_videos',
         sources: ['local', 'url', 'camera'],
         resourceType: 'image',
         clientAllowedFormats: ['png', 'jpg', 'jpeg', 'webp'],
-        maxFileSize: 5000000, // 5MB
+        maxFileSize: 5000000,
         cropping: true,
-        croppingAspectRatio: 1.6, // Aspect ratio 16:10 aprox
+        croppingAspectRatio: 1.6,
         showSkipCropButton: false,
     }, (error, result) => {
         if (!error && result && result.event === "success") {
@@ -472,7 +471,6 @@ $(document).ready(function () {
     // --- CAMBIO DE CONTRASEÑA (FIREBASE) ---
     $('#form-cambiar-password').on('submit', function (e) {
         e.preventDefault();
-        // console.log("Formulario de cambio de contraseña enviado.");
 
         const currentPassword = $('#current-password').val();
         const newPassword = $('#new-password').val();
@@ -529,22 +527,18 @@ $(document).ready(function () {
                 return;
             }
 
-            // console.log("Intentando re-autenticar a:", user.email);
             const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
 
             user.reauthenticateWithCredential(credential).then(() => {
-                // console.log("Re-autenticación exitosa. Actualizando contraseña...");
                 user.updatePassword(newPassword).then(() => {
                     showToast("Contraseña actualizada correctamente.", 'success');
                     $('#form-cambiar-password')[0].reset();
                     $btn.prop('disabled', false).text('Actualizar Contraseña');
                 }).catch((error) => {
-                    // console.error("Error al actualizar contraseña:", error);
                     showToast("Error al actualizar: " + error.message, 'error');
                     $btn.prop('disabled', false).text('Actualizar Contraseña');
                 });
             }).catch((error) => {
-                // console.error("Error en re-autenticación:", error);
                 if (error.code === 'auth/wrong-password' ||
                     (error.code === 'auth/internal-error' && (error.message.includes('INVALID_LOGIN_CREDENTIALS') || error.message.includes('INVALID_PASSWORD')))) {
                     showToast("La contraseña actual es incorrecta.", 'error');
@@ -616,7 +610,7 @@ $(document).ready(function () {
                 $body.html('Si continúas, tus datos se borrarán para siempre. Ni los hackers rusos podrán recuperarlos. ¿Estás 100% seguro?');
                 break;
             case 4:
-                $icon.addClass('bi-skull-crossbones text-dark'); // O un color muy oscuro
+                $icon.addClass('bi-skull-crossbones text-dark');
                 $title.text('Autodestrucción Inminente ☠️');
                 $body.html(`
                     <p>Última oportunidad. Para detonar tu cuenta, primero verifica tu identidad.</p>
