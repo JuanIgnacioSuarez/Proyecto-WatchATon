@@ -1,54 +1,6 @@
-# Ignorar directorios de vendor
 /vendor/
-
-# Ignorar archivos de composer
 composer.lock
-
-# Ignorar archivos de configuración de IDE (VS Code, si aplica)
 .vscode/
-
-# Ignorar archivos específicos del sistema operativo o temporales
 .DS_Store
 thumbs.db
-
-# Ignorar directorios de caché de Brave (o cualquier otro navegador que pueda estar en AppData/Local)
-# Esto es crucial ya que estos archivos causaron el error de permisos.
-# Asegúrate de que la ruta sea correcta si tu proyecto está directamente en AppData o si estás en una subcarpeta.
-# Asumiendo que el proyecto está en C:\xampp\htdocs\Trabajo Progra web(Cursor)
-# y que el error de AppData/Local se refiere a archivos FUERA del proyecto, pero en el mismo contexto de búsqueda.
-# Si los archivos de AppData/Local están *dentro* de la raíz del proyecto por alguna razón,
-# ajusta la ruta en consecuencia. Por ahora, ignoraré la ruta completa de AppData/Local
-# ya que es una práctica estándar para evitar subir datos de usuario o del sistema.
-
-# Debido al error: AppData/Local/BraveSoftware/Brave-Browser/User Data/Default/Cache
-# Es probable que el comando 'git add .' estuviera intentando añadir archivos fuera del directorio del proyecto
-# o que hubiera enlaces simbólicos. Lo más seguro es ignorar el directorio completo de AppData.
-# Si tu proyecto NO está dentro de AppData, esto es una buena medida preventiva.
-
-# Directorios de sistema y caché de Windows (ej. Brave, otros)
-# La ruta completa que causó problemas fue: AppData/Local/BraveSoftware/Brave-Browser/User Data/Default/Cache/Cache_Data/data_0
-# Para ignorar esto, necesito asegurarme de que el .gitignore se aplique correctamente.
-# Si el problema persiste, puede que necesitemos un .gitignore más específico o ejecutar 'git add' desde un subdirectorio.
-
-# Por ahora, un enfoque general para ignorar directorios de caché de usuario si están siendo escaneados inesperadamente:
-# Para evitar problemas con rutas absolutas o fuera del proyecto, lo mejor es no añadir .gitignore con rutas absolutas
-# y en su lugar, concentrarse en lo que está *dentro* del repositorio.
-
-# Si el error persiste y viene de C:\Users\Juan\AppData\Local..., significa que el 'git add .' está intentando salir del directorio del proyecto.
-# La solución más limpia es asegurar que el 'git add .' solo opere dentro del directorio del proyecto.
-# Como estoy en 'C:\xampp\htdocs\Trabajo Progra web(Cursor)', los archivos de 'C:\Users\Juan\AppData\Local' no deberían ser incluidos por 'git add .' a menos que haya un problema con la forma en que se está ejecutando el comando o enlaces simbólicos.
-
-# El error 'fatal: adding files failed' con 'Permission denied' en 'AppData/Local/BraveSoftware...' indica que 'git add .' está intentando rastrear algo fuera del directorio de trabajo actual.
-# Voy a intentar con un .gitignore para las rutas esperadas del proyecto y luego re-ejecutar 'git add .'
-# Si el error persiste, la solución podría ser reiniciar la terminal o ejecutar 'git add' de forma más granular.
-
-# Ignorar el directorio de la extensión de Python de VS Code que se incluyó en los warnings
-.vscode/extensions/
-
-# Ignorar la carpeta AppData/Local que parece haberse incluido por error en el `git add .`
-# Esto es un patrón común para ignorar directorios de usuario o temporales.
-# Si tu proyecto está anidado dentro de AppData, este patrón necesitará ser ajustado.
-# Asumiendo que AppData es un directorio de nivel superior al del proyecto actual.
-# **/.vscode/
-# **/.git/
-# **/AppData/
+backend/debug/
