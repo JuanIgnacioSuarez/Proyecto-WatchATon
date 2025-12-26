@@ -39,7 +39,7 @@ $estaVencido = false;
 $fechaVencimientoFormatted = null;
 
 // Buscar la fecha de vencimiento más lejana (mejor beneficio)
-$sqlPremium = "SELECT MAX(fecha_vencimiento) as ultima_fecha FROM canjeos WHERE ID_usuario = ? AND ID_beneficio = 0";
+$sqlPremium = "SELECT MAX(fecha_vencimiento) as ultima_fecha FROM canjeos WHERE ID_usuario = ? AND ID_beneficio = 0 AND activo = 1";
 $resPremium = $conexion->consultar($sqlPremium, "i", [$id_usuario]);
 
 if (!empty($resPremium) && !empty($resPremium[0]['ultima_fecha'])) {

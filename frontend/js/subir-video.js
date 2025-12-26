@@ -1,5 +1,4 @@
 var ID = "";
-var Url = "";
 var videosubido = false;   //Esto lo usamos para saber si el video ya fue subido a cloudinary
 
 // Variables para la portada
@@ -46,7 +45,6 @@ $(document).ready(function () {
     if (!error && result && result.event === "success") {     //Si se subio con exito el video
       showToast("¡Video subido con éxito! Ahora llena los demás campos y guarda los datos.", 'success');
       ID = result.info.public_id;
-      Url = result.info.secure_url;
       videosubido = true;
       $("#SubirVideo").prop("disabled", true);    //No dejamos subir mas videos , desactivamos el boton
 
@@ -87,9 +85,7 @@ $(document).ready(function () {
         }
       } else {
         // Fallback si cld-video-player no está disponible
-        $("#videoPreview").attr("src", Url); // Cargar el video nativo
-        $("#videoPreviewContainer").show(); // Mostrar el contenedor del reproductor (para fallback)
-
+        $("#videoPreviewContainer").show();
       }
     }
   });
@@ -145,7 +141,7 @@ $(document).ready(function () {
     }
 
 
-    $.post('../../backend/php/CargarBD.php', { ID: ID, Url: Url, titulo: titulo, descripcion: descripcion, portadaID: portadaID }, function (data) {  //Esto primero verifica si cumple las condiciones y devuelve valores
+    $.post('../../backend/php/CargarBD.php', { ID: ID, titulo: titulo, descripcion: descripcion, portadaID: portadaID }, function (data) {
       switch (data) {
         case "mal":                                             //Falto cargar o el video o los campos de titulo y descripcion
           showToast("Suba un video, una portada y llene los campos!", 'warning');
@@ -157,7 +153,6 @@ $(document).ready(function () {
           showToast("Video subido y datos guardados correctamente!", 'success');
           videosubido = false;
           ID = "";
-          Url = "";
           portadaID = "";
           portadaUrl = "";
           $("#SubirVideo").prop("disabled", false);             //Reseteamos todo y le permitimos cargar otro video si quisiera
@@ -209,7 +204,6 @@ $(document).ready(function () {
           // Resetear variables y ocultar previsualización
           videosubido = false;
           ID = "";
-          Url = "";
           $("#SubirVideo").prop("disabled", false);
           if ($("#videoPreview").data('cld-vp')) {
             $("#videoPreview").data('cld-vp').dispose();

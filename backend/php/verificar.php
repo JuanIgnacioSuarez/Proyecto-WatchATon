@@ -41,7 +41,7 @@ else{
 
 				// Verificar si es Premium (Tiene canjeo con ID_beneficio = 0)
 				$idUsuario = $datos[0]['ID'];
-				$sqlPremium = "SELECT COUNT(*) as total FROM canjeos WHERE ID_usuario = ? AND ID_beneficio = 0";
+				$sqlPremium = "SELECT COUNT(*) as total FROM canjeos WHERE ID_usuario = ? AND ID_beneficio = 0 AND activo = 1";
 				$resPremium = $conexion->consultar($sqlPremium, "i", [$idUsuario]);
 				
                 // LOGGING

@@ -24,7 +24,7 @@ if (isset($_COOKIE['iniciado'])) {
         $sql = "SELECT c.ID_beneficio 
                 FROM canjeos c 
                 LEFT JOIN pagos p ON c.ID_canjeo = p.id_canje 
-                WHERE c.ID_usuario = ? AND p.id_pago IS NULL";
+                WHERE c.ID_usuario = ? AND p.id_pago IS NULL AND c.activo = 1";
         $tipos = "i";
         $parametros = [$id_usuario];
         $yaCanjeados = $conexion->consultar($sql, $tipos, $parametros);

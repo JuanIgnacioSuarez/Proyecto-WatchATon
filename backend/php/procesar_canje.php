@@ -41,7 +41,7 @@ if ($puntosUsuario < $costo) {
 $sqlCheck = "SELECT c.ID_canjeo 
              FROM canjeos c 
              LEFT JOIN pagos p ON c.ID_canjeo = p.id_canje 
-             WHERE c.ID_usuario = ? AND c.ID_beneficio = ? AND p.id_pago IS NULL";
+             WHERE c.ID_usuario = ? AND c.ID_beneficio = ? AND p.id_pago IS NULL AND c.activo = 1";
 $check = $conexion->consultar($sqlCheck, "ii", [$id_usuario, $id_beneficio]);
 
 if (count($check) > 0) {
